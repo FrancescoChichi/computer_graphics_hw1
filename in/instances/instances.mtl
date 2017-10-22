@@ -1,0 +1,75 @@
+newmtl floor_txt
+  illum 2
+  Kd 1 1 1
+  Ns 1e+06
+  map_Kd grid.png
+
+newmtl mat000
+  illum 2
+  Kd 0.608615 0.680257 0.687722
+  Ns 1e+06
+
+newmtl mat001
+  illum 2
+  Kd 0.701966 0.785166 0.692466
+  Ns 1e+06
+
+newmtl mat002
+  illum 2
+  Kd 0.993295 0.753481 0.782777
+  Ks 0.04 0.04 0.04
+  Ns 3163.34
+
+newmtl mat003
+  illum 2
+  Kd 0.660036 0.884636 0.597892
+  Ks 0.04 0.04 0.04
+  Ns 4164.64
+
+newmtl mat004
+  illum 2
+  Kd 0.637381 0.545537 0.75595
+  Ks 0.04 0.04 0.04
+  Ns 2728.5
+
+newmtl mat005
+  illum 2
+  Kd 0.707766 0.975899 0.816008
+  Ns 1e+06
+
+newmtl mat006
+  illum 2
+  Kd 0.867546 0.902404 0.853728
+  Ns 1e+06
+
+newmtl mat007
+  illum 2
+  Kd 0.932635 0.804507 0.671818
+  Ns 1e+06
+
+newmtl mat008
+  illum 2
+  Kd 0.548249 0.531185 0.85399
+  Ks 0.04 0.04 0.04
+  Ns 4607.25
+
+newmtl mat009
+  illum 2
+  Kd 0.54363 0.54942 0.551612
+  Ks 0.04 0.04 0.04
+  Ns 2312.73
+
+newmtl pointlight01
+  illum 2
+  Ke 3000 3000 3000
+  Ns 1e+06
+
+newmtl pointlight02
+  illum 2
+  Ke 1000 1000 1000
+  Ns 1e+06
+
+newmtl pointlight03
+  illum 2
+  Ke 1000 1000 1000
+  Ns 1e+06

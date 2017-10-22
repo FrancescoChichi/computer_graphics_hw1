@@ -1,0 +1,25 @@
+BasedOnStyle: Google
+AlignAfterOpenBracket: DontAlign
+AlignEscapedNewlinesLeft: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+AlwaysBreakBeforeMultilineStrings: true
+AlwaysBreakTemplateDeclarations: true
+AlwaysBreakAfterReturnType: None
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+IndentCaseLabels: true
+IndentWidth:     4
+KeepEmptyLinesAtTheStartOfBlocks: false
+DerivePointerAlignment: false
+PointerAlignment: Left
+Standard:        Auto
+Cpp11BracedListStyle: true
+
+ColumnLimit: 80
+
+PenaltyReturnTypeOnItsOwnLine: 200
+PenaltyBreakBeforeFirstCallParameter: 2000
