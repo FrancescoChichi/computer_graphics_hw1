@@ -71,7 +71,7 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
 
   ym::image4f img = ym;
 
-  // antialiased with n^2 samplers per pixel
+  /// antialiased with n^2 samplers per pixel
   for(int j = 0; j<resolution; j++) {
     for(int i = 0; i<resolution; i++) {
       //img[i,j] = {0,0,0};
