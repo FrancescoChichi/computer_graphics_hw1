@@ -1,0 +1,1 @@
+/usr/bin/c++.exe -O3 -DNDEBUG  -Wl,--enable-auto-import CMakeFiles/raytrace.dir/src/raytrace.cpp.o  -o ../bin/raytrace.exe -Wl,--out-implib,../bin/libraytrace.dll.a -Wl,--major-image-version,0,--minor-image-version,0 ../bin/libhwlib.a 
