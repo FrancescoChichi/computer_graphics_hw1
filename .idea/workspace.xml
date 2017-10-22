@@ -13,11 +13,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c2123ccc-6e5d-4b65-bdf2-c4c6374994ad" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/raytrace.dir/src/raytrace.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/raytrace.dir/src/raytrace.cpp.o" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/raytrace.cpp" afterPath="$PROJECT_DIR$/src/raytrace.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/yocto_obj.cpp" afterPath="$PROJECT_DIR$/src/yocto_obj.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,8 +30,8 @@
       <file leaf-file-name="raytrace.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/raytrace.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="33" column="49" lean-forward="false" selection-start-line="31" selection-start-column="27" selection-end-line="33" selection-end-column="49" />
+            <state relative-caret-position="289">
+              <caret line="116" column="50" lean-forward="false" selection-start-line="116" selection-start-column="43" selection-end-line="116" selection-end-column="50" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -44,48 +42,8 @@
       <file leaf-file-name="yocto_bvh.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/yocto_bvh.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="481" column="5" lean-forward="false" selection-start-line="481" selection-start-column="5" selection-end-line="481" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="yocto_bvh.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/yocto_bvh.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="33" column="57" lean-forward="false" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="57" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="yocto_obj.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/yocto_obj.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="272" column="27" lean-forward="false" selection-start-line="272" selection-start-column="27" selection-end-line="272" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="yocto_math.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/yocto_math.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="1785" column="7" lean-forward="false" selection-start-line="1785" selection-start-column="7" selection-end-line="1785" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="yocto_obj.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/yocto_obj.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36100">
-              <caret line="1444" column="9" lean-forward="false" selection-start-line="1444" selection-start-column="9" selection-end-line="1444" selection-end-column="9" />
+            <state relative-caret-position="202">
+              <caret line="134" column="7" lean-forward="false" selection-start-line="134" selection-start-column="7" selection-end-line="134" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -106,6 +64,11 @@
       <find>add_point_shape</find>
       <find>build_scene_bvh</find>
       <find>intersect_ray</find>
+      <find>raytrace</find>
+      <find>ray3f</find>
+      <find>camera_ray</find>
+      <find>camera</find>
+      <find>parallel</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -126,7 +89,7 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="260" />
     <option name="y" value="20" />
     <option name="width" value="1400" />
@@ -182,7 +145,7 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.Unnamed">
-    <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-r 720 -s 3 -p -o ../out/basic.png ../in/basic/basic.obj " PASS_PARENT_ENVS_2="true" PROJECT_NAME="graphics17b_hw01" TARGET_NAME="raytrace" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="graphics17b_hw01" RUN_TARGET_NAME="raytrace">
+    <configuration name="Unnamed" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-r 720 -s 3  -o ../out/basic.png ../in/basic/basic.obj " PASS_PARENT_ENVS_2="true" PROJECT_NAME="graphics17b_hw01" TARGET_NAME="raytrace" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="graphics17b_hw01" RUN_TARGET_NAME="raytrace">
       <envs />
     </configuration>
   </component>
@@ -198,15 +161,15 @@
       <updated>1508680279759</updated>
       <workItem from="1508680281636" duration="2142000" />
       <workItem from="1508686834092" duration="2766000" />
-      <workItem from="1508689610947" duration="2588000" />
+      <workItem from="1508689610947" duration="6133000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7496000" />
+    <option name="totallyTimeSpent" value="11041000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18020834" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -215,7 +178,7 @@
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -239,9 +202,9 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18020834" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18020834" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -322,50 +285,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/yocto_obj.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36100">
-          <caret line="1444" column="9" lean-forward="false" selection-start-line="1444" selection-start-column="9" selection-end-line="1444" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/yocto_math.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="1785" column="7" lean-forward="false" selection-start-line="1785" selection-start-column="7" selection-end-line="1785" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/yocto_obj.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="272" column="27" lean-forward="false" selection-start-line="272" selection-start-column="27" selection-end-line="272" selection-end-column="27" />
+        <state relative-caret-position="192">
+          <caret line="5077" column="6" lean-forward="false" selection-start-line="5077" selection-start-column="6" selection-end-line="5077" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/yocto_bvh.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="33" column="57" lean-forward="false" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="57" />
+        <state relative-caret-position="173">
+          <caret line="123" column="10" lean-forward="true" selection-start-line="123" selection-start-column="10" selection-end-line="123" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/yocto_obj.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="1444" column="9" lean-forward="false" selection-start-line="1444" selection-start-column="9" selection-end-line="1444" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/yocto_img.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1925">
+          <caret line="7" column="46" lean-forward="true" selection-start-line="7" selection-start-column="46" selection-end-line="7" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/yocto_img.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4132">
+          <caret line="13" column="35" lean-forward="false" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/yocto_utils.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="350" column="43" lean-forward="true" selection-start-line="350" selection-start-column="43" selection-end-line="350" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/yocto_obj.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3004">
+          <caret line="323" column="16" lean-forward="false" selection-start-line="323" selection-start-column="10" selection-end-line="323" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/yocto_bvh.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="481" column="5" lean-forward="false" selection-start-line="481" selection-start-column="5" selection-end-line="481" selection-end-column="5" />
+        <state relative-caret-position="202">
+          <caret line="134" column="7" lean-forward="false" selection-start-line="134" selection-start-column="7" selection-end-line="134" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/raytrace.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="33" column="49" lean-forward="false" selection-start-line="31" selection-start-column="27" selection-end-line="33" selection-end-column="49" />
+        <state relative-caret-position="289">
+          <caret line="116" column="50" lean-forward="false" selection-start-line="116" selection-start-column="43" selection-end-line="116" selection-end-column="50" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
           </folding>

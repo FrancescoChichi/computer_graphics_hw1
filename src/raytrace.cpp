@@ -6,8 +6,6 @@
 #include "yocto_utils.h"
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
-  // YOUR CODE GOES HERE ----------------------
-
   auto bvh_scn = ybvh::make_scene();
 
   ///add shape data and transforms and add shape instances
@@ -68,7 +66,26 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
-  // YOUR CODE GOES HERE ----------------------
+
+  //std::cerr<<scn->cameras[0]->focus<<std::endl;
+
+  ym::image4f img = ym;
+
+  // antialiased with n^2 samplers per pixel
+  for(int j = 0; j<resolution; j++) {
+    for(int i = 0; i<resolution; i++) {
+      //img[i,j] = {0,0,0};
+      for (int sj = 0; sj < samples; ++sj){
+        for (int si = 0; si < samples; ++si){
+          auto u = (i + (si+0.5f)/samples) / resolution;
+          auto v = (j + (sj+0.5f)/samples) / resolution;
+          //auto ray = camera_ray(cam, u, v);
+          //img[i,j] += compute_color(scn, ray);
+        }
+      }
+      //img[i,j] /= ns*ns;
+    }
+  }
   return {};
 }
 
