@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_bvh.cpp" "/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o"
-  "/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_img.cpp" "/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_img.cpp.o"
-  "/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_obj.cpp" "/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o"
+  "/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_bvh.cpp" "/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o"
+  "/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_img.cpp" "/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_img.cpp.o"
+  "/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_obj.cpp" "/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

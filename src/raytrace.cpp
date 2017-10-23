@@ -13,32 +13,32 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     int sid = 0;
     for (auto& shape : inst->msh->shapes) {
       sid = ybvh::add_point_shape(bvh_scn,
-                            shape->points.size(), shape->points.data(),
-                            shape->pos.size(), shape->pos.data(),
-                            shape->radius.data());
+                                  shape->points.size(), shape->points.data(),
+                                  shape->pos.size(), shape->pos.data(),
+                                  shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
                          ym::inverse(inst->xform()), sid);
 
       sid = ybvh::add_line_shape(bvh_scn,
-                           shape->lines.size(), shape->lines.data(),
-                           shape->pos.size(), shape->pos.data(),
-                           shape->radius.data());
+                                 shape->lines.size(), shape->lines.data(),
+                                 shape->pos.size(), shape->pos.data(),
+                                 shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
-                               ym::inverse(inst->xform()), sid);
+                         ym::inverse(inst->xform()), sid);
 
       sid = ybvh::add_triangle_shape(bvh_scn,
-                           shape->triangles.size(), shape->triangles.data(),
-                           shape->pos.size(), shape->pos.data(),
-                           shape->radius.data());
+                                     shape->triangles.size(), shape->triangles.data(),
+                                     shape->pos.size(), shape->pos.data(),
+                                     shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
-                               ym::inverse(inst->xform()), sid);
+                         ym::inverse(inst->xform()), sid);
 
       sid = ybvh::add_tetra_shape(bvh_scn,
-                            shape->tetras.size(), shape->tetras.data(),
-                            shape->pos.size(), shape->pos.data(),
-                            shape->radius.data());
+                                  shape->tetras.size(), shape->tetras.data(),
+                                  shape->pos.size(), shape->pos.data(),
+                                  shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
-                               ym::inverse(inst->xform()), sid);
+                         ym::inverse(inst->xform()), sid);
     }
   }
   ybvh::build_scene_bvh(bvh_scn);
@@ -69,12 +69,16 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
 
   //std::cerr<<scn->cameras[0]->focus<<std::endl;
 
-  ym::image4f img = ym;
+  auto px = ym::vec<float, 4>(.2);
+  px.x=.0;
+  px.y=.2;
+  px.z=.0;
+  ym::image4f img = ym::image4f(resolution,resolution, px);
 
   /// antialiased with n^2 samplers per pixel
   for(int j = 0; j<resolution; j++) {
     for(int i = 0; i<resolution; i++) {
-      //img[i,j] = {0,0,0};
+      img.assign(i,j, px);
       for (int sj = 0; sj < samples; ++sj){
         for (int si = 0; si < samples; ++si){
           auto u = (i + (si+0.5f)/samples) / resolution;
@@ -86,7 +90,7 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
       //img[i,j] /= ns*ns;
     }
   }
-  return {};
+  return {img};
 }
 
 ym::image4f raytrace_mt(const yobj::scene* scn, const ybvh::scene* bvh,
