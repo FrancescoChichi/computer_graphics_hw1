@@ -64,34 +64,51 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
   return bvh_scn;
 }
 
+
+ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
+  auto camera_pos = ym::to_frame(cam->xform());
+  auto q = camera_pos.o
+   + ((u - .5f)*w*camera_pos.x)
+   + ((v - .5f)*h*camera_pos.y)
+   - (cam->focus*camera_pos.z);
+  auto d = q-camera_pos.o;
+  ym::ray3f ray = ym::ray3f(camera_pos.o,d/(ym::length(d)));
+  return ray;
+}
+
+
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
-
-  //std::cerr<<scn->cameras[0]->focus<<std::endl;
 
   auto px = ym::vec<float, 4>(.2);
   px.x=.0;
   px.y=.2;
   px.z=.0;
   ym::image4f img = ym::image4f(resolution,resolution, px);
+  auto cam = scn->cameras[0];
+  float w = resolution * cam->aspect;
+  float h = 2 * std::tan(cam->yfov / 2);
+
 
   /// antialiased with n^2 samplers per pixel
   for(int j = 0; j<resolution; j++) {
     for(int i = 0; i<resolution; i++) {
-      img.assign(i,j, px);
+      img[{i,j}]=px;
       for (int sj = 0; sj < samples; ++sj){
         for (int si = 0; si < samples; ++si){
           auto u = (i + (si+0.5f)/samples) / resolution;
           auto v = (j + (sj+0.5f)/samples) / resolution;
-          //auto ray = camera_ray(cam, u, v);
-          //img[i,j] += compute_color(scn, ray);
+          auto ray = camera_ray(cam, u, v, w, h);
+          //img[{i,j}]+= compute_color(scn, ray);
         }
       }
-      //img[i,j] /= ns*ns;
+      img[{i,j}] /= (float) samples*samples;
     }
   }
   return {img};
 }
+
+
 
 ym::image4f raytrace_mt(const yobj::scene* scn, const ybvh::scene* bvh,
                         const ym::vec3f& amb, int resolution, int samples) {

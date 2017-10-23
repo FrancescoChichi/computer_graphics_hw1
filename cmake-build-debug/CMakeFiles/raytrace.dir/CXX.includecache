@@ -6,21 +6,21 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/raytrace.cpp
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/raytrace.cpp
 thread
 -
 yocto_bvh.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_bvh.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_bvh.h
 yocto_img.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_img.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_img.h
 yocto_math.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 yocto_obj.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_obj.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_obj.h
 yocto_utils.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_utils.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_utils.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_bvh.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_bvh.h
 array
 -
 functional
@@ -28,9 +28,9 @@ functional
 vector
 -
 yocto_math.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_img.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_img.h
 array
 -
 string
@@ -38,9 +38,9 @@ string
 vector
 -
 yocto_math.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 algorithm
 -
 cassert
@@ -60,7 +60,7 @@ unordered_map
 vector
 -
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_obj.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_obj.h
 array
 -
 cmath
@@ -72,9 +72,9 @@ string
 vector
 -
 yocto_math.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_utils.h
+/cygdrive/c/Users/francesco/Documents/computer_graphics_hw1/src/yocto_utils.h
 cassert
 -
 chrono
