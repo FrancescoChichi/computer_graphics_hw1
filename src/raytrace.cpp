@@ -6,7 +6,8 @@
 #include "yocto_utils.h"
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
-  auto bvh_scn = ybvh::make_scene();
+
+  ybvh::scene* bvh_scn = ybvh::make_scene();
 
   ///add shape data and transforms and add shape instances
   for (auto& inst : scn->instances) {
@@ -42,25 +43,6 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     }
   }
   ybvh::build_scene_bvh(bvh_scn);
-
-
-/// 5. perform ray-interseciton tests with `intersect_ray()`
-///     - use early_exit=false if you want to know the closest hit point
-///     - use early_exit=false if you only need to know whether there is a hit
-///     - for points and lines, a radius is required
-///     - for triangle and tetrahedra, the radius is ignored
-/// 6. perform point overlap tests with `overlap_point()` to if a point overlaps
-///       with an element within a maximum distance
-///     - use early_exit as above
-///     - for all primitives, a radius is used if defined, but should
-///       be very small compared to the size of the primitive since the radius
-///       overlap is approximate
-/// 7. perform shape overlap queries with `overlap_shape_bounds()`
-/// 8. use `refit_bvh()` to recompute the bvh bounds if transforms or vertices
-///    are (you should rebuild the bvh for large changes); update the instances'
-///    transforms with `set_instance_frame()` or `set_instance_transform();
-///    shapes use shared memory, so no explicit update is necessary
-///
   return bvh_scn;
 }
 
@@ -71,21 +53,44 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
    + ((u - .5f)*w*camera_pos.x)
    + ((v - .5f)*h*camera_pos.y)
    - (cam->focus*camera_pos.z);
+
   auto d = q-camera_pos.o;
+  //std::cerr<<"d x "<<d.x<<" y "<<d.y<<" z "<<d.z<<std::endl<<std::endl;
+
   ym::ray3f ray = ym::ray3f(camera_pos.o,d/(ym::length(d)));
+
+  //std::cerr<<"ray: x "<<ray.d.x<<" y "<<ray.d.y<<" z "<<ray.d.z<<std::endl;
+
   return ray;
 }
 
+ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
+  //auto px = ym::vec<float,4>(1);
+
+  auto intersaction = ybvh::intersect_scene(bvh, ray, true);
+
+  std::cerr<<intersaction.dist<<std::endl;
+
+  //std::cerr<< scn.sc->instances[intersaction.iid]->msh->shapes[intersaction.sid]->name<<std::endl;
+ // std::cerr<< scn->instances[2]->msh->shapes[0]->color[0].y<<std::endl;
+ /* img[i,j] = shade(shp, isec.uv);
+}
+}
+vec3f shade(instance* ist, vec3f uv) {
+  return ist->mat->kd;
+
+*/
+}
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
 
-  auto px = ym::vec<float, 4>(.2);
-  px.x=.0;
-  px.y=.2;
+  auto px = ym::vec<float, 4>(1);
+  px.x=.5;
+  px.y=.8;
   px.z=.0;
   ym::image4f img = ym::image4f(resolution,resolution, px);
-  auto cam = scn->cameras[0];
+  auto cam = scn->cameras[1];
   float w = resolution * cam->aspect;
   float h = 2 * std::tan(cam->yfov / 2);
 
@@ -99,7 +104,7 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
           auto u = (i + (si+0.5f)/samples) / resolution;
           auto v = (j + (sj+0.5f)/samples) / resolution;
           auto ray = camera_ray(cam, u, v, w, h);
-          //img[{i,j}]+= compute_color(scn, ray);
+          img[{i,j}] += compute_color(bvh, scn, ray);
         }
       }
       img[{i,j}] /= (float) samples*samples;
