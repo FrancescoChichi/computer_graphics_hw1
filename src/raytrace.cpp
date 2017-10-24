@@ -58,6 +58,9 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
   //std::cerr<<"d x "<<d.x<<" y "<<d.y<<" z "<<d.z<<std::endl<<std::endl;
 
   ym::ray3f ray = ym::ray3f(camera_pos.o,d/(ym::length(d)));
+  ray.o = camera_pos.o;
+  ray.d = ym::normalize(d);
+  //ray.d=normalize(Q-originPos);
 
   //std::cerr<<"ray: x "<<ray.d.x<<" y "<<ray.d.y<<" z "<<ray.d.z<<std::endl;
 
