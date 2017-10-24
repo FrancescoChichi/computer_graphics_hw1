@@ -144,13 +144,13 @@ namespace yobj {
 ///
 /// Property map
 ///
-  template <typename T>
-  using property_map = std::map<std::string, std::vector<T>>;
+template <typename T>
+using property_map = std::map<std::string, std::vector<T>>;
 
 ///
 /// Scene Texture
 ///
-  struct texture {
+struct texture {
     /// path
     std::string path;
     /// if loaded, ldr image
@@ -160,34 +160,34 @@ namespace yobj {
 
     /// get texture width
     int width() const {
-      if (ldr) return ldr.width();
-      if (hdr) return hdr.width();
-      return 0;
+        if (ldr) return ldr.width();
+        if (hdr) return hdr.width();
+        return 0;
     }
     /// get texture height
     int height() const {
-      if (ldr) return ldr.height();
-      if (hdr) return hdr.height();
-      return 0;
+        if (ldr) return ldr.height();
+        if (hdr) return hdr.height();
+        return 0;
     }
-  };
+};
 
 ///
 /// Scene Texture Additional Information
 ///
-  struct texture_info {
+struct texture_info {
     /// clamping
     bool clamp = false;
     /// bump scale
     float bump_scale = 1;
     /// unknown string props
     property_map<std::string> unknown_props;
-  };
+};
 
 ///
 /// Scene Material
 ///
-  struct material {
+struct material {
     // whole material data -------------------
     /// material name
     std::string name;
@@ -199,6 +199,8 @@ namespace yobj {
     ym::vec3f kd = {0, 0, 0};
     /// specular color
     ym::vec3f ks = {0, 0, 0};
+    /// reflection color
+    ym::vec3f kr = {0, 0, 0};
     /// transmission color
     ym::vec3f kt = {0, 0, 0};
     /// roughness
@@ -213,6 +215,8 @@ namespace yobj {
     texture* kd_txt = nullptr;
     /// specular texture
     texture* ks_txt = nullptr;
+    /// reflection texture
+    texture* kr_txt = nullptr;
     /// transmission texture
     texture* kt_txt = nullptr;
     /// roughness texture
@@ -233,6 +237,8 @@ namespace yobj {
     texture_info kd_txt_info = {};
     /// specular texture
     texture_info ks_txt_info = {};
+    /// reflection texture
+    texture_info kr_txt_info = {};
     /// transmission texture
     texture_info kt_txt_info = {};
     /// roughness texture
@@ -247,12 +253,12 @@ namespace yobj {
     // unknown properties ---------------------
     /// unknown string props
     property_map<std::string> unknown_props;
-  };
+};
 
 ///
 /// Shape. May contain only one of the points/lines/triangles.
 ///
-  struct shape {
+struct shape {
     /// name of the group that enclosed it
     std::string name = "";
     /// material
@@ -281,12 +287,12 @@ namespace yobj {
     std::vector<float> radius;
     /// [extension] per-vertex tangent space (4 float)
     std::vector<ym::vec4f> tangsp;
-  };
+};
 
 ///
 /// Mesh
 ///
-  struct mesh {
+struct mesh {
     // name
     std::string name;
     /// primitives
@@ -294,12 +300,12 @@ namespace yobj {
 
     /// cleanup
     ~mesh();
-  };
+};
 
 ///
 /// Mesh instance.
 ///
-  struct instance {
+struct instance {
     // name
     std::string name;
     /// translation
@@ -315,15 +321,15 @@ namespace yobj {
 
     /// xform
     ym::mat4f xform() const {
-      return ym::translation_mat4(translation) * ym::rotation_mat4(rotation) *
-             ym::scaling_mat4(scale) * matrix;
+        return ym::translation_mat4(translation) * ym::rotation_mat4(rotation) *
+               ym::scaling_mat4(scale) * matrix;
     }
-  };
+};
 
 ///
 /// Scene Camera
 ///
-  struct camera {
+struct camera {
     /// name
     std::string name;
     /// translation
@@ -345,16 +351,15 @@ namespace yobj {
 
     /// xform
     ym::mat4f xform() const {
-      return ym::translation_mat4(translation) * ym::rotation_mat4(rotation) *
-             matrix;
+        return ym::translation_mat4(translation) * ym::rotation_mat4(rotation) *
+               matrix;
     }
-
-  };
+};
 
 ///
 /// Envinonment map
 ///
-  struct environment {
+struct environment {
     /// name
     std::string name;
     /// index of material in material array
@@ -366,12 +371,12 @@ namespace yobj {
 
     /// xform
     ym::mat4f xform() const { return ym::rotation_mat4(rotation) * matrix; }
-  };
+};
 
 ///
 /// Scene
 ///
-  struct scene {
+struct scene {
     /// shape array
     std::vector<mesh*> meshes;
     /// instance array
@@ -387,7 +392,7 @@ namespace yobj {
 
     /// cleanup
     ~scene();
-  };
+};
 
 ///
 /// Load scene
@@ -403,9 +408,9 @@ namespace yobj {
 /// - Returns:
 ///     - scene (nullptr on error)
 ///
-  scene* load_scene(const std::string& filename, bool load_textures,
-                    bool skip_missing = true, bool flip_texcoord = true,
-                    bool facent_non_smooth = false, bool flip_tr = true);
+scene* load_scene(const std::string& filename, bool load_textures,
+    bool skip_missing = true, bool flip_texcoord = true,
+    bool facent_non_smooth = false, bool flip_tr = true);
 
 ///
 /// Save scene
@@ -418,9 +423,9 @@ namespace yobj {
 ///     - flip_texcoord: whether to flip the v coordinate
 ///     - flip_tr: whether to flip tr
 ///
-  void save_scene(const std::string& filename, const scene* scn,
-                  bool save_textures, bool skip_missing = true, bool flip_texcoord = true,
-                  bool flip_tr = true);
+void save_scene(const std::string& filename, const scene* scn,
+    bool save_textures, bool skip_missing = true, bool flip_texcoord = true,
+    bool flip_tr = true);
 
 #ifndef YOBJ_NO_IMAGE
 
@@ -433,8 +438,8 @@ namespace yobj {
 ///     - skip_missing: whether to skip missing textures or stops with error
 ///     - err: if set, store error message on error
 ///
-  void load_textures(scene* scn, const std::string& dirname,
-                     bool skip_missing = false);
+void load_textures(
+    scene* scn, const std::string& dirname, bool skip_missing = false);
 
 ///
 /// Saves textures for an scene.
@@ -445,60 +450,60 @@ namespace yobj {
 ///     - skip_missing: whether to skip missing textures or stops with error
 ///     - err: if set, store error message on error
 ///
-  void save_textures(const scene* scn, const std::string& dirname,
-                     bool skip_missing = false);
+void save_textures(
+    const scene* scn, const std::string& dirname, bool skip_missing = false);
 
 #endif
 
 ///
 /// Computes a scene bounding box
 ///
-  ym::bbox3f compute_scene_bounds(const scene* scn);
+ym::bbox3f compute_scene_bounds(const scene* scn);
 
 ///
 /// Add missing data to the scene.
 ///
-  void add_normals(scene* scn);
+void add_normals(scene* scn);
 
 ///
 /// Add missing data to the scene.
 ///
-  void add_radius(scene* scn, float radius);
+void add_radius(scene* scn, float radius);
 
 ///
 /// Add missing data to the scene.
 ///
-  void add_tangent_space(scene* scn);
+void add_tangent_space(scene* scn);
 
 ///
 /// Add missing data to the scene.
 ///
-  void add_texture_data(scene* scn);
+void add_texture_data(scene* scn);
 
 ///
 /// Add missing data to the scene.
 ///
-  void add_instances(scene* scn);
+void add_instances(scene* scn);
 
 ///
 /// Add missing data to the scene.
 ///
-  void add_names(scene* scn);
+void add_names(scene* scn);
 
 ///
 /// Add a default camera that views the entire scene.
 ///
-  void add_default_camera(scene* scn);
+void add_default_camera(scene* scn);
 
 ///
 /// Flatten scene instances into separate meshes.
 ///
-  void flatten_instances(scene* scn);
+void flatten_instances(scene* scn);
 
 ///
 /// Split meshes into single shapes
 ///
-  void split_shapes(scene* scn);
+void split_shapes(scene* scn);
 
 // -----------------------------------------------------------------------------
 // LOW-LEVEL INTERFACE
@@ -507,7 +512,7 @@ namespace yobj {
 ///
 /// Face vertex
 ///
-  struct obj_vertex {
+struct obj_vertex {
     /// position
     int pos;
     /// texcoord
@@ -521,44 +526,41 @@ namespace yobj {
 
     /// Constructor (copies members initializing missing ones to -1)
     obj_vertex(int pos = -1, int texcoord = -1, int norm = -1, int color = -1,
-               int radius = -1)
-        : pos(pos)
-        , texcoord(texcoord)
-        , norm(norm)
-        , color(color)
-        , radius(radius) {}
-  };
+        int radius = -1)
+        : pos(pos), texcoord(texcoord), norm(norm), color(color),
+          radius(radius) {}
+};
 
 ///
 /// element type
 ///
-  enum struct obj_element_type : uint16_t {
+enum struct obj_element_type : uint16_t {
     /// lists of points
-        point = 1,
+    point = 1,
     /// polylines
-        line = 2,
+    line = 2,
     /// polygon faces
-        face = 3,
+    face = 3,
     /// tetrahedrons
-        tetra = 4,
-  };
+    tetra = 4,
+};
 
 ///
 /// Element vertex indices
 ///
-  struct obj_element {
+struct obj_element {
     /// starting vertex index
     uint32_t start;
     /// element type
     obj_element_type type;
     /// number of vertices
     uint16_t size;
-  };
+};
 
 ///
 /// Element group
 ///
-  struct obj_group {
+struct obj_group {
     // group data ---------------------------
     /// material name
     std::string matname;
@@ -572,12 +574,12 @@ namespace yobj {
     std::vector<obj_vertex> verts;
     /// element faces
     std::vector<obj_element> elems;
-  };
+};
 
 ///
 /// Obj object
 ///
-  struct obj_object {
+struct obj_object {
     // object data --------------------------
     /// object name
     std::string name;
@@ -585,12 +587,12 @@ namespace yobj {
     // element data -------------------------
     /// element groups
     std::vector<obj_group> groups;
-  };
+};
 
 ///
 /// OBJ texture. Texture data is loaded only if desired.
 ///
-  struct obj_texture {
+struct obj_texture {
     // whole texture data ------------------
     /// texture path
     std::string path;
@@ -604,12 +606,12 @@ namespace yobj {
     std::vector<uint8_t> datab;
     /// Buffer data for float images
     std::vector<float> dataf;
-  };
+};
 
 ///
 /// OBJ material
 ///
-  struct obj_material {
+struct obj_material {
     // whole material data ------------------
     /// material name
     std::string name;
@@ -691,12 +693,12 @@ namespace yobj {
     // unknown properties ---------------------
     /// unknown string props
     property_map<std::string> unknown_props;
-  };
+};
 
 ///
 /// Camera [extension]
 ///
-  struct obj_camera {
+struct obj_camera {
     /// camera name
     std::string name;
     /// translation
@@ -717,12 +719,12 @@ namespace yobj {
     float aperture = 0;
     /// focus distance
     float focus = 1;
-  };
+};
 
 ///
 /// Environment [extension]
 ///
-  struct obj_environment {
+struct obj_environment {
     /// environment name
     std::string name;
     /// rotation
@@ -731,12 +733,12 @@ namespace yobj {
     ym::mat4f matrix = ym::identity_mat4f;
     /// material name
     std::string matname;
-  };
+};
 
 ///
 /// Instance [extension]
 ///
-  struct obj_instance {
+struct obj_instance {
     /// instance name
     std::string name;
     /// translation
@@ -749,12 +751,12 @@ namespace yobj {
     ym::mat4f matrix = ym::identity_mat4f;
     /// object name
     std::string meshname;
-  };
+};
 
 ///
 /// OBJ asset
 ///
-  struct obj {
+struct obj {
     // vertex data -------------------------
     /// vertex positions
     std::vector<ym::vec3f> pos;
@@ -780,7 +782,7 @@ namespace yobj {
     std::vector<obj_environment> environments;
     /// instances [extension]
     std::vector<obj_instance> instances;
-  };
+};
 
 ///
 /// Load OBJ
@@ -794,8 +796,8 @@ namespace yobj {
 /// - Return:
 ///     - obj (nullptr on error)
 ///
-  obj* load_obj(const std::string& filename, bool load_textures = false,
-                bool skip_missing = false, bool flip_texcoord = true, bool flip_tr = true);
+obj* load_obj(const std::string& filename, bool load_textures = false,
+    bool skip_missing = false, bool flip_texcoord = true, bool flip_tr = true);
 
 ///
 /// Save OBJ
@@ -810,9 +812,9 @@ namespace yobj {
 /// - Returns:
 ///     - whether an error occurred
 ///
-  void save_obj(const std::string& filename, const obj* model,
-                bool save_textures = false, bool skip_missing = false,
-                bool flip_texcoord = true, bool flip_tr = true);
+void save_obj(const std::string& filename, const obj* model,
+    bool save_textures = false, bool skip_missing = false,
+    bool flip_texcoord = true, bool flip_tr = true);
 
 ///
 /// Converts an OBJ into a scene.
@@ -821,7 +823,7 @@ namespace yobj {
 ///     - model: obj to be flattened
 ///     - facet_non_smooth: duplicate vertices if smoothing off
 ///
-  scene* obj_to_scene(const obj* model, bool facet_non_smooth);
+scene* obj_to_scene(const obj* model, bool facet_non_smooth);
 
 ///
 /// Save a scene in an OBJ file.
@@ -829,7 +831,7 @@ namespace yobj {
 /// - Parameters:
 ///     - scn: scene to convert
 ///
-  obj* scene_to_obj(const scene* scn);
+obj* scene_to_obj(const scene* scn);
 
 }  // namespace yobj
 

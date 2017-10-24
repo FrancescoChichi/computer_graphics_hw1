@@ -1,4 +1,0 @@
-C:\Users\franc\.CLion2017.2\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/c/Users/franc/Documents/computer_graphics_hw1
--- Configuring done
--- Generating done
--- Build files have been written to: /cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug

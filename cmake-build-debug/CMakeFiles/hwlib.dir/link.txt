@@ -1,2 +1,0 @@
-/usr/bin/ar.exe qc ../bin/libhwlib.a  CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o CMakeFiles/hwlib.dir/src/yocto_img.cpp.o CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o
-/usr/bin/ranlib.exe ../bin/libhwlib.a

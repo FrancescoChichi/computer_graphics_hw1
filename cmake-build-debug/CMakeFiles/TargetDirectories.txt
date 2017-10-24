@@ -1,4 +1,0 @@
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/raytrace.dir
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir
