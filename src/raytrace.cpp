@@ -4,39 +4,41 @@
 #include "yocto_math.h"
 #include "yocto_obj.h"
 #include "yocto_utils.h"
+using namespace std;
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
 
   ybvh::scene* bvh_scn = ybvh::make_scene();
+  int sid = 0;
 
   ///add shape data and transforms and add shape instances
   for (auto& inst : scn->instances) {
-    int sid = 0;
     for (auto& shape : inst->msh->shapes) {
+
       sid = ybvh::add_point_shape(bvh_scn,
-                                  shape->points.size(), shape->points.data(),
-                                  shape->pos.size(), shape->pos.data(),
+                                  (int) shape->points.size(), shape->points.data(),
+                                  (int) shape->pos.size(), shape->pos.data(),
                                   shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
                          ym::inverse(inst->xform()), sid);
 
       sid = ybvh::add_line_shape(bvh_scn,
-                                 shape->lines.size(), shape->lines.data(),
-                                 shape->pos.size(), shape->pos.data(),
+                                 (int) shape->lines.size(), shape->lines.data(),
+                                 (int) shape->pos.size(), shape->pos.data(),
                                  shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
                          ym::inverse(inst->xform()), sid);
 
       sid = ybvh::add_triangle_shape(bvh_scn,
-                                     shape->triangles.size(), shape->triangles.data(),
-                                     shape->pos.size(), shape->pos.data(),
+                                     (int) shape->triangles.size(), shape->triangles.data(),
+                                     (int) shape->pos.size(), shape->pos.data(),
                                      shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
                          ym::inverse(inst->xform()), sid);
 
       sid = ybvh::add_tetra_shape(bvh_scn,
-                                  shape->tetras.size(), shape->tetras.data(),
-                                  shape->pos.size(), shape->pos.data(),
+                                  (int) shape->tetras.size(), shape->tetras.data(),
+                                  (int) shape->pos.size(), shape->pos.data(),
                                   shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
                          ym::inverse(inst->xform()), sid);
@@ -55,25 +57,41 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
    - (cam->focus*camera_pos.z);
 
   auto d = q-camera_pos.o;
-  //std::cerr<<"d x "<<d.x<<" y "<<d.y<<" z "<<d.z<<std::endl<<std::endl;
-
-  ym::ray3f ray = ym::ray3f(camera_pos.o,d/(ym::length(d)));
-  ray.o = camera_pos.o;
-  ray.d = ym::normalize(d);
-  //ray.d=normalize(Q-originPos);
-
-  //std::cerr<<"ray: x "<<ray.d.x<<" y "<<ray.d.y<<" z "<<ray.d.z<<std::endl;
-
+  ym::ray3f ray = ym::ray3f();
+  ray.d=ym::normalize(d);
+  //std::cerr<<"d "<<d.x<<" "<<d.y<<" "<<d.z<<std::endl;
+  ray.o=camera_pos.o;
   return ray;
 }
 
-ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
+int compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
   //auto px = ym::vec<float,4>(1);
 
-  auto intersaction = ybvh::intersect_scene(bvh, ray, true);
+  auto intersection = ybvh::intersect_scene(bvh, ray, false);
 
-  std::cerr<<intersaction.dist<<std::endl;
+  /*auto x = intersection.iid;
+  if(intersection.dist>0)
+    */
+  //std::cerr<<scn->instances.size()<<std::endl;
+  //std::cerr<<x<<std::endl;
+  //if((intersection)&&(intersection.iid!=2))
+ //   std::cout<<scn->instances.at(intersection.iid)->name<<std::endl;
+  ym::vec3f v = ym::vec3f();
+  //v.w=1;
 
+ // cerr<<"dist: "<<intersection.dist<<endl;
+ // cerr<<"eid: "<<intersection.eid<<endl;
+
+  if(intersection.eid>=0){//&&(intersection.iid<scn->instances.size())&&(intersection.dist>.0)) {
+    //v = scn->instances.at(intersection.iid)->msh->shapes.at(0)->mat->kd;
+    //yu::logging::log_info("dist " + to_string(intersection.dist));
+    v = {255,255,255};
+    return 1;
+  }
+
+
+
+  return 0;
   //std::cerr<< scn.sc->instances[intersaction.iid]->msh->shapes[intersaction.sid]->name<<std::endl;
  // std::cerr<< scn->instances[2]->msh->shapes[0]->color[0].y<<std::endl;
  /* img[i,j] = shade(shp, isec.uv);
@@ -88,31 +106,46 @@ vec3f shade(instance* ist, vec3f uv) {
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
 
-  auto px = ym::vec<float, 4>(1);
-  px.x=.5;
-  px.y=.8;
-  px.z=.0;
-  ym::image4f img = ym::image4f(resolution,resolution, px);
-  auto cam = scn->cameras[1];
-  float w = resolution * cam->aspect;
-  float h = 2 * std::tan(cam->yfov / 2);
+  auto px = ym::vec<float, 4>(0.0);
+int c=0;
+  auto cam = scn->cameras[0];
+  int h = resolution;
+  int w = (int) round(h * cam->aspect);
+
+  ym::image4f img = ym::image4f(w,h, px);
+
+  //cerr<<"w "<<w<<" h "<<h<<" yfov "<<cam->yfov<<" aspect "<<cam->aspect<<" res " <<resolution<<endl;
 
 
   /// antialiased with n^2 samplers per pixel
-  for(int j = 0; j<resolution; j++) {
-    for(int i = 0; i<resolution; i++) {
+  for(int j = 0; j<h; j++) {
+    for(int i = 0; i<w; i++) {
       img[{i,j}]=px;
-      for (int sj = 0; sj < samples; ++sj){
-        for (int si = 0; si < samples; ++si){
-          auto u = (i + (si+0.5f)/samples) / resolution;
-          auto v = (j + (sj+0.5f)/samples) / resolution;
-          auto ray = camera_ray(cam, u, v, w, h);
-          img[{i,j}] += compute_color(bvh, scn, ray);
-        }
-      }
-      img[{i,j}] /= (float) samples*samples;
+      //for (int sj = 0; sj < samples; ++sj){
+        //for (int si = 0; si < samples; ++si){
+          //auto u = (i + (si+0.5f)/samples) / resolution;
+          //auto v = (j + (sj+0.5f)/samples) / resolution;
+          //auto ray = camera_ray(cam, u, v, w, h);
+      auto u = (i +0.5f) / w;
+      auto v = (j +0.5f) / h;
+      auto ray = camera_ray(cam, u, v, w, h);
+      //cerr<<"ray min"<<ray.tmin<< " max "<<ray.tmax<<endl;
+
+      //std::cerr<<"img prima px "<<i<<" "<<j<<" x "<<img[{i,j}].x<<" y "<<img[{i,j}].y<<" z "<<img[{i,j}].z<<" w "<<img[{i,j}].w<<std::endl;
+
+      //img[{i,j}].xyz() =
+          c +=compute_color(bvh, scn, ray);
+      yu::logging::log_info("c " + to_string(c));
+
+
+      //std::cerr<<"img px "<<i<<" "<<j<<" x "<<img[{i,j}].x<<" y "<<img[{i,j}].y<<" z "<<img[{i,j}].z<<" w "<<img[{i,j}].w<<std::endl;
+      //img[{i,j}] += compute_color(bvh, scn, ray);
+        //}
+      //}
+      //img[{i,j}] /= (float) samples*samples;
     }
   }
+  yu::logging::log_info("c " + to_string(c));
   return {img};
 }
 
