@@ -64,7 +64,7 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
   return ray;
 }
 
-int compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
+ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
   //auto px = ym::vec<float,4>(1);
 
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
@@ -76,22 +76,23 @@ int compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray)
   //std::cerr<<x<<std::endl;
   //if((intersection)&&(intersection.iid!=2))
  //   std::cout<<scn->instances.at(intersection.iid)->name<<std::endl;
-  ym::vec3f v = ym::vec3f();
+  ym::vec3f v = ym::vec3f(0,0,0);
   //v.w=1;
 
  // cerr<<"dist: "<<intersection.dist<<endl;
  // cerr<<"eid: "<<intersection.eid<<endl;
 
-  if(intersection.eid>=0){//&&(intersection.iid<scn->instances.size())&&(intersection.dist>.0)) {
-    //v = scn->instances.at(intersection.iid)->msh->shapes.at(0)->mat->kd;
+  if(intersection){//&&(intersection.iid<scn->instances.size())&&(intersection.dist>.0)) {
+
+    v = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
     //yu::logging::log_info("dist " + to_string(intersection.dist));
-    v = {255,255,255};
-    return 1;
+    //yu::logging::log_info("color x " + to_string(scn->instances[intersection.iid]->msh->shapes[0]->mat->kd.x));
+
+    //v = {255,.0,255};
   }
 
 
 
-  return 0;
   //std::cerr<< scn.sc->instances[intersaction.iid]->msh->shapes[intersaction.sid]->name<<std::endl;
  // std::cerr<< scn->instances[2]->msh->shapes[0]->color[0].y<<std::endl;
  /* img[i,j] = shade(shp, isec.uv);
@@ -101,13 +102,15 @@ vec3f shade(instance* ist, vec3f uv) {
   return ist->mat->kd;
 
 */
+  return v;
+
 }
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
 
-  auto px = ym::vec<float, 4>(0.0);
-int c=0;
+  auto px = ym::vec<float, 4>(255.0);
+
   auto cam = scn->cameras[0];
   int h = resolution;
   int w = (int) round(h * cam->aspect);
@@ -133,9 +136,16 @@ int c=0;
 
       //std::cerr<<"img prima px "<<i<<" "<<j<<" x "<<img[{i,j}].x<<" y "<<img[{i,j}].y<<" z "<<img[{i,j}].z<<" w "<<img[{i,j}].w<<std::endl;
 
-      //img[{i,j}].xyz() =
-          c +=compute_color(bvh, scn, ray);
-      yu::logging::log_info("c " + to_string(c));
+      //img[{i,j}].xyz() = compute_color(bvh, scn, ray);
+
+      img[{i,j}].xyz() = compute_color(bvh, scn, ray);
+      /*img[{i,j}].xyz().data()=a.data();
+      img[{i,j}].xyz().y=a.y;
+      img[{i,j}].xyz().z=a.z;
+*/
+     // yu::logging::log_info("dsadassada: " + to_string(img[{i,j}].xyz().x)+ "  " + to_string(img[{i,j}].xyz().y)+ "  " + to_string(img[{i,j}].xyz().z));
+
+   //   yu::logging::log_info("color: x " + to_string(s.x)+" y: " + to_string(s.y)+" z: " + to_string(s.z));
 
 
       //std::cerr<<"img px "<<i<<" "<<j<<" x "<<img[{i,j}].x<<" y "<<img[{i,j}].y<<" z "<<img[{i,j}].z<<" w "<<img[{i,j}].w<<std::endl;
@@ -145,7 +155,9 @@ int c=0;
       //img[{i,j}] /= (float) samples*samples;
     }
   }
-  yu::logging::log_info("c " + to_string(c));
+
+  yu::logging::log_info("image h: " + to_string(h)+" w: " + to_string(w) );
+
   return {img};
 }
 
