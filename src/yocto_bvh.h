@@ -322,7 +322,7 @@ void refit_shape_bvh(scene* scn, int sid);
 ///
 struct intersection_point {
     /// distance
-    float dist = 0.0f;
+    float dist = 0;
     /// instance index
     int iid = -1;
     /// shape index
