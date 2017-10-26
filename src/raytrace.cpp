@@ -69,39 +69,14 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
 
-  /*auto x = intersection.iid;
-  if(intersection.dist>0)
-    */
-  //std::cerr<<scn->instances.size()<<std::endl;
-  //std::cerr<<x<<std::endl;
-  //if((intersection)&&(intersection.iid!=2))
- //   std::cout<<scn->instances.at(intersection.iid)->name<<std::endl;
   ym::vec3f v = ym::vec3f(0,0,0);
-  //v.w=1;
 
- // cerr<<"dist: "<<intersection.dist<<endl;
- // cerr<<"eid: "<<intersection.eid<<endl;
-
-  if(intersection){//&&(intersection.iid<scn->instances.size())&&(intersection.dist>.0)) {
-
-    v = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
-    //yu::logging::log_info("dist " + to_string(intersection.dist));
-    //yu::logging::log_info("color x " + to_string(scn->instances[intersection.iid]->msh->shapes[0]->mat->kd.x));
-
-    //v = {255,.0,255};
+  if(intersection){
+    auto k = scn->instances[intersection.iid]->msh->shapes[0]->mat->ks;
+    v = {255,.0,255};
+    //v = {k.x,k.y,k.z};
   }
 
-
-
-  //std::cerr<< scn.sc->instances[intersaction.iid]->msh->shapes[intersaction.sid]->name<<std::endl;
- // std::cerr<< scn->instances[2]->msh->shapes[0]->color[0].y<<std::endl;
- /* img[i,j] = shade(shp, isec.uv);
-}
-}
-vec3f shade(instance* ist, vec3f uv) {
-  return ist->mat->kd;
-
-*/
   return v;
 
 }
@@ -110,6 +85,14 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
 
   auto px = ym::vec<float, 4>(255.0);
+
+
+  //scn->cameras[0]->rotation.x+=0.25;
+  //scn->cameras[0]->translation.z+=6.8;
+  //scn->cameras[0]->translation.y+=1.2;
+
+
+  //yu::logging::log_info("Z: " + to_string(scn->cameras[0]->rotation.x) );
 
   auto cam = scn->cameras[0];
   int h = resolution;
