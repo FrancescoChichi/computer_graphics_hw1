@@ -14,34 +14,32 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
   ///add shape data and transforms and add shape instances
   for (auto& inst : scn->instances) {
     for (auto& shape : inst->msh->shapes) {
+      //yu::logging::log_info("lines "+to_string(shape->lines.size()) + " points " +to_string(shape->points.size())
+        //                    + " triangoli " +to_string(shape->triangles.size()) + " tetra " + to_string(shape->tetras.size()));
+      
+      if(!shape->points.empty()){
+        sid = ybvh::add_point_shape(bvh_scn,
+                                    (int) shape->points.size(), shape->points.data(),
+                                    (int) shape->pos.size(), shape->pos.data(),
+                                    shape->radius.data());
+      }
+      else if(!shape->lines.empty()) {
+        sid = ybvh::add_line_shape(bvh_scn,
+                                   (int) shape->lines.size(), shape->lines.data(),
+                                   (int) shape->pos.size(), shape->pos.data(),
+                                   shape->radius.data());
+      }
+      else if(!shape->triangles.empty()) {
+        sid = ybvh::add_triangle_shape(bvh_scn,
+                                       (int) shape->triangles.size(), shape->triangles.data(),
+                                       (int) shape->pos.size(), shape->pos.data(),
+                                       shape->radius.data());
+      }
 
-      sid = ybvh::add_point_shape(bvh_scn,
-                                  (int) shape->points.size(), shape->points.data(),
-                                  (int) shape->pos.size(), shape->pos.data(),
-                                  shape->radius.data());
       ybvh::add_instance(bvh_scn,inst->xform(),
                          ym::inverse(inst->xform()), sid);
+      yu::logging::log_info("sid "+to_string(sid));
 
-      sid = ybvh::add_line_shape(bvh_scn,
-                                 (int) shape->lines.size(), shape->lines.data(),
-                                 (int) shape->pos.size(), shape->pos.data(),
-                                 shape->radius.data());
-      ybvh::add_instance(bvh_scn,inst->xform(),
-                         ym::inverse(inst->xform()), sid);
-
-      sid = ybvh::add_triangle_shape(bvh_scn,
-                                     (int) shape->triangles.size(), shape->triangles.data(),
-                                     (int) shape->pos.size(), shape->pos.data(),
-                                     shape->radius.data());
-      ybvh::add_instance(bvh_scn,inst->xform(),
-                         ym::inverse(inst->xform()), sid);
-
-      sid = ybvh::add_tetra_shape(bvh_scn,
-                                  (int) shape->tetras.size(), shape->tetras.data(),
-                                  (int) shape->pos.size(), shape->pos.data(),
-                                  shape->radius.data());
-      ybvh::add_instance(bvh_scn,inst->xform(),
-                         ym::inverse(inst->xform()), sid);
     }
   }
   ybvh::build_scene_bvh(bvh_scn);
@@ -72,7 +70,8 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
   ym::vec3f v = ym::vec3f(0,0,0);
 
   if(intersection){
-    auto k = scn->instances[intersection.iid]->msh->shapes[0]->mat->ks;
+    //yu::logging::log_info("obj: " + (scn->instances[intersection.iid]->name) );
+    auto k = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
     v = {255,.0,255};
     //v = {k.x,k.y,k.z};
   }
@@ -87,25 +86,26 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
   auto px = ym::vec<float, 4>(255.0);
 
 
-  //scn->cameras[0]->rotation.x+=0.25;
-  //scn->cameras[0]->translation.z+=6.8;
+  scn->cameras[0]->rotation.x+=0.25;
+  scn->cameras[0]->translation.z+=9.2;
   //scn->cameras[0]->translation.y+=1.2;
 
 
   //yu::logging::log_info("Z: " + to_string(scn->cameras[0]->rotation.x) );
 
   auto cam = scn->cameras[0];
-  int h = resolution;
-  int w = (int) round(h * cam->aspect);
-
-  ym::image4f img = ym::image4f(w,h, px);
+  float h = 2*tan(cam->yfov/2);
+  float w = h*cam->aspect;
+  int r = resolution;
+  int c = (int)abs(resolution*cam->aspect);
+  ym::image4f img = ym::image4f(r,c, px);
 
   //cerr<<"w "<<w<<" h "<<h<<" yfov "<<cam->yfov<<" aspect "<<cam->aspect<<" res " <<resolution<<endl;
 
 
   /// antialiased with n^2 samplers per pixel
-  for(int j = 0; j<h; j++) {
-    for(int i = 0; i<w; i++) {
+  for(int j = 0; j<r; j++) {
+    for(int i = 0; i<c; i++) {
       img[{i,j}]=px;
       //for (int sj = 0; sj < samples; ++sj){
         //for (int si = 0; si < samples; ++si){
