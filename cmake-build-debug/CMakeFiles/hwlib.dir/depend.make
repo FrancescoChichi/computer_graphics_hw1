@@ -4,6 +4,7 @@
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o: ../src/yocto_bvh.cpp
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o: ../src/yocto_bvh.h
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o: ../src/yocto_math.h
+CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o: ../src/yocto_utils.h
 
 CMakeFiles/hwlib.dir/src/yocto_img.cpp.o: ../src/ext/stb_image.h
 CMakeFiles/hwlib.dir/src/yocto_img.cpp.o: ../src/ext/stb_image_resize.h

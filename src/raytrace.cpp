@@ -9,14 +9,15 @@ using namespace std;
 ybvh::scene* make_bvh(yobj::scene* scn) {
 
   ybvh::scene* bvh_scn = ybvh::make_scene();
-  int sid = 0;
 
+  int sid = 0;
   ///add shape data and transforms and add shape instances
+
   for (auto& inst : scn->instances) {
     for (auto& shape : inst->msh->shapes) {
       //yu::logging::log_info("lines "+to_string(shape->lines.size()) + " points " +to_string(shape->points.size())
         //                    + " triangoli " +to_string(shape->triangles.size()) + " tetra " + to_string(shape->tetras.size()));
-      
+
       if(!shape->points.empty()){
         sid = ybvh::add_point_shape(bvh_scn,
                                     (int) shape->points.size(), shape->points.data(),
@@ -38,10 +39,10 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
       ybvh::add_instance(bvh_scn,inst->xform(),
                          ym::inverse(inst->xform()), sid);
-      yu::logging::log_info("sid "+to_string(sid));
 
     }
   }
+  //yu::logging::log_info("******************");
   ybvh::build_scene_bvh(bvh_scn);
   return bvh_scn;
 }
@@ -71,9 +72,12 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
   if(intersection){
     //yu::logging::log_info("obj: " + (scn->instances[intersection.iid]->name) );
+    if(intersection.iid!=0)
+      yu::logging::log_info("obj: " + (scn->instances[intersection.iid]->name) );
+
     auto k = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
-    v = {255,.0,255};
-    //v = {k.x,k.y,k.z};
+    //v = {255,0,255};
+    v = {k.x,k.y,k.z};
   }
 
   return v;
@@ -86,8 +90,8 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
   auto px = ym::vec<float, 4>(255.0);
 
 
-  scn->cameras[0]->rotation.x+=0.25;
-  scn->cameras[0]->translation.z+=9.2;
+//  scn->cameras[0]->rotation.x+=0.25;
+//  scn->cameras[0]->translation.z+=9.2;
   //scn->cameras[0]->translation.y+=1.2;
 
 
@@ -96,50 +100,19 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
   auto cam = scn->cameras[0];
   float h = 2*tan(cam->yfov/2);
   float w = h*cam->aspect;
-  int r = resolution;
-  int c = (int)abs(resolution*cam->aspect);
-  ym::image4f img = ym::image4f(r,c, px);
-
-  //cerr<<"w "<<w<<" h "<<h<<" yfov "<<cam->yfov<<" aspect "<<cam->aspect<<" res " <<resolution<<endl;
-
+  int height = resolution;
+  int width = abs(resolution*cam->aspect);
+  ym::image4f img = ym::image4f(width,height, px);
 
   /// antialiased with n^2 samplers per pixel
-  for(int j = 0; j<r; j++) {
-    for(int i = 0; i<c; i++) {
-      img[{i,j}]=px;
-      //for (int sj = 0; sj < samples; ++sj){
-        //for (int si = 0; si < samples; ++si){
-          //auto u = (i + (si+0.5f)/samples) / resolution;
-          //auto v = (j + (sj+0.5f)/samples) / resolution;
-          //auto ray = camera_ray(cam, u, v, w, h);
-      auto u = (i +0.5f) / w;
-      auto v = (j +0.5f) / h;
+  for(int j = 0; j<height; j++) {
+    for(int i = 0; i<width; i++) {
+      auto u = (i +0.5f) / width;
+      auto v = (j +0.5f) / height;
       auto ray = camera_ray(cam, u, v, w, h);
-      //cerr<<"ray min"<<ray.tmin<< " max "<<ray.tmax<<endl;
-
-      //std::cerr<<"img prima px "<<i<<" "<<j<<" x "<<img[{i,j}].x<<" y "<<img[{i,j}].y<<" z "<<img[{i,j}].z<<" w "<<img[{i,j}].w<<std::endl;
-
-      //img[{i,j}].xyz() = compute_color(bvh, scn, ray);
-
       img[{i,j}].xyz() = compute_color(bvh, scn, ray);
-      /*img[{i,j}].xyz().data()=a.data();
-      img[{i,j}].xyz().y=a.y;
-      img[{i,j}].xyz().z=a.z;
-*/
-     // yu::logging::log_info("dsadassada: " + to_string(img[{i,j}].xyz().x)+ "  " + to_string(img[{i,j}].xyz().y)+ "  " + to_string(img[{i,j}].xyz().z));
-
-   //   yu::logging::log_info("color: x " + to_string(s.x)+" y: " + to_string(s.y)+" z: " + to_string(s.z));
-
-
-      //std::cerr<<"img px "<<i<<" "<<j<<" x "<<img[{i,j}].x<<" y "<<img[{i,j}].y<<" z "<<img[{i,j}].z<<" w "<<img[{i,j}].w<<std::endl;
-      //img[{i,j}] += compute_color(bvh, scn, ray);
-        //}
-      //}
-      //img[{i,j}] /= (float) samples*samples;
     }
   }
-
-  yu::logging::log_info("image h: " + to_string(h)+" w: " + to_string(w) );
 
   return {img};
 }
@@ -153,6 +126,9 @@ ym::image4f raytrace_mt(const yobj::scene* scn, const ybvh::scene* bvh,
 }
 
 int main(int argc, char** argv) {
+
+  printf("ciao \n");
+
   // command line parsing
   auto parser =
       yu::cmdline::make_parser(argc, argv, "raytrace", "raytrace scene");
@@ -182,6 +158,8 @@ int main(int argc, char** argv) {
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
+  yu::logging::log_info("bvh created");
+
   // raytrace
   yu::logging::log_info("tracing scene");
   auto hdr = (parallel)
