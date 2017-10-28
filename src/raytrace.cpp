@@ -6,6 +6,12 @@
 #include "yocto_utils.h"
 using namespace std;
 
+void printFrame(ym::frame<float,3> M){
+    cout <<M.x.x <<","<<M.y.x<<","<<M.z.x<<";"<<endl;
+    cout <<M.x.y <<","<<M.y.y<<","<<M.z.y<<";"<<endl;
+    cout <<M.x.z <<","<<M.y.z<<","<<M.z.z<<";"<<endl;
+}
+
 ybvh::scene* make_bvh(yobj::scene* scn) {
 
   ybvh::scene* bvh_scn = ybvh::make_scene();
@@ -34,11 +40,12 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     } else {
       assert(false);
     }
+
   }
   for (auto ist : scn->instances) {
 
+    printFrame(ym::to_frame(ist->xform()));
     for (auto shp : ist->msh->shapes) {
-
       ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                            shape_map.at(shp));
     }

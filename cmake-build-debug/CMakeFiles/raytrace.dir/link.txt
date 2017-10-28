@@ -1,1 +1,1 @@
-/usr/bin/c++   -O3 -DNDEBUG   CMakeFiles/raytrace.dir/src/raytrace.cpp.o  -o ../bin/raytrace ../bin/libhwlib.a 
+/usr/bin/c++  -O3 -DNDEBUG   CMakeFiles/raytrace.dir/src/raytrace.cpp.o  -o ../bin/raytrace ../bin/libhwlib.a 

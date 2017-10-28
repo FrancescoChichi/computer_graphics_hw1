@@ -6,13 +6,13 @@ newmtl floor_txt
 newmtl obj01
   illum 2
   Kd 0.5 0.2 0.2
-  Ks 0.04 0.04 0.04
+  Ks 0.5 0.5 0.5
   Ns 198
 
 newmtl obj02
   illum 2
   Kd 0.2 0.5 0.2
-  Ks 0.04 0.04 0.04
+  Ks 0.8 0.8 0.8
   Ns 798
 
 newmtl pointlight

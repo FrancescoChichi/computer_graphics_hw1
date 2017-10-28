@@ -140,7 +140,7 @@ using uint = unsigned int;
 // -----------------------------------------------------------------------------
 
 /// pi (float)
-constexpr const float pif = 3.14159265f;
+const float pif = 3.14159265f;
 /// pi (double)
 const double pi = 3.1415926535897932384626433832795;
 
