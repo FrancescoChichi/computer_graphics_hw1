@@ -705,8 +705,8 @@ void save_mtl(const std::string& filename,
 //
 // Loads textures for an scene.
 //
-void save_textures(const obj* asset, const std::string& dirname,
-    bool skip_missing) {
+void save_textures(
+    const obj* asset, const std::string& dirname, bool skip_missing) {
 #ifndef YOBJ_NO_IMAGE
     for (auto& txt : asset->textures) {
         if (txt.datab.empty() && txt.dataf.empty()) continue;
@@ -964,12 +964,14 @@ scene* obj_to_scene(const obj* asset, bool facet_non_smooth) {
         mat->ke = omat.ke;
         mat->kd = omat.kd;
         mat->ks = omat.ks;
+        mat->kr = omat.kr;
         mat->kt = omat.kt;
         mat->rs = sqrt(2 / (omat.ns + 2));
         mat->opacity = omat.op;
         mat->ke_txt = add_texture(omat.ke_txt, scn->textures);
         mat->kd_txt = add_texture(omat.kd_txt, scn->textures);
         mat->ks_txt = add_texture(omat.ks_txt, scn->textures);
+        mat->kr_txt = add_texture(omat.kr_txt, scn->textures);
         mat->kt_txt = add_texture(omat.kt_txt, scn->textures);
         mat->rs_txt = add_texture(omat.ns_txt, scn->textures);
         mat->norm_txt = add_texture(omat.norm_txt, scn->textures);
@@ -978,6 +980,7 @@ scene* obj_to_scene(const obj* asset, bool facet_non_smooth) {
         mat->ke_txt_info = _convert_texture_info(omat.ke_txt_info);
         mat->kd_txt_info = _convert_texture_info(omat.kd_txt_info);
         mat->ks_txt_info = _convert_texture_info(omat.ks_txt_info);
+        mat->kr_txt_info = _convert_texture_info(omat.kr_txt_info);
         mat->kt_txt_info = _convert_texture_info(omat.kt_txt_info);
         mat->rs_txt_info = _convert_texture_info(omat.ns_txt_info);
         mat->norm_txt_info = _convert_texture_info(omat.norm_txt_info);
@@ -1254,12 +1257,14 @@ obj* scene_to_obj(const scene* scn) {
         mat->ke = fl_mat->ke;
         mat->kd = fl_mat->kd;
         mat->ks = fl_mat->ks;
+        mat->kr = fl_mat->kr;
         mat->kt = fl_mat->kt;
         mat->ns = (fl_mat->rs) ? 2 / (fl_mat->rs * fl_mat->rs) - 2 : 1e6;
         mat->op = fl_mat->opacity;
         mat->ke_txt = (fl_mat->ke_txt) ? fl_mat->ke_txt->path : "";
         mat->kd_txt = (fl_mat->kd_txt) ? fl_mat->kd_txt->path : "";
         mat->ks_txt = (fl_mat->ks_txt) ? fl_mat->ks_txt->path : "";
+        mat->kr_txt = (fl_mat->kr_txt) ? fl_mat->kr_txt->path : "";
         mat->kt_txt = (fl_mat->kt_txt) ? fl_mat->kt_txt->path : "";
         mat->ns_txt = (fl_mat->rs_txt) ? fl_mat->rs_txt->path : "";
         mat->bump_txt = (fl_mat->bump_txt) ? fl_mat->bump_txt->path : "";
@@ -1302,9 +1307,9 @@ obj* scene_to_obj(const scene* scn) {
             for (auto point : fl_prim->points) {
                 group->elems.push_back({(uint32_t)group->verts.size(),
                     obj_element_type::point, 1});
-                group->verts.push_back({(fl_prim->pos.empty()) ?
-                                            -1 :
-                                            offset.pos + point,
+                group->verts.push_back({(fl_prim->pos.empty())
+                                            ? -1
+                                            : offset.pos + point,
                     (fl_prim->texcoord.empty()) ? -1 : offset.texcoord + point,
                     (fl_prim->norm.empty()) ? -1 : offset.norm + point,
                     (fl_prim->color.empty()) ? -1 : offset.color + point,
@@ -1316,12 +1321,12 @@ obj* scene_to_obj(const scene* scn) {
                 for (auto vid : line) {
                     group->verts.push_back(
                         {(fl_prim->pos.empty()) ? -1 : offset.pos + vid,
-                            (fl_prim->texcoord.empty()) ? -1 :
-                                                          offset.texcoord + vid,
+                            (fl_prim->texcoord.empty()) ? -1
+                                                        : offset.texcoord + vid,
                             (fl_prim->norm.empty()) ? -1 : offset.norm + vid,
                             (fl_prim->color.empty()) ? -1 : offset.color + vid,
-                            (fl_prim->radius.empty()) ? -1 :
-                                                        offset.radius + vid});
+                            (fl_prim->radius.empty()) ? -1
+                                                      : offset.radius + vid});
                 }
             }
             for (auto triangle : fl_prim->triangles) {
@@ -1330,12 +1335,12 @@ obj* scene_to_obj(const scene* scn) {
                 for (auto vid : triangle) {
                     group->verts.push_back(
                         {(fl_prim->pos.empty()) ? -1 : offset.pos + vid,
-                            (fl_prim->texcoord.empty()) ? -1 :
-                                                          offset.texcoord + vid,
+                            (fl_prim->texcoord.empty()) ? -1
+                                                        : offset.texcoord + vid,
                             (fl_prim->norm.empty()) ? -1 : offset.norm + vid,
                             (fl_prim->color.empty()) ? -1 : offset.color + vid,
-                            (fl_prim->radius.empty()) ? -1 :
-                                                        offset.radius + vid});
+                            (fl_prim->radius.empty()) ? -1
+                                                      : offset.radius + vid});
                 }
             }
             for (auto tet : fl_prim->tetras) {
@@ -1344,12 +1349,12 @@ obj* scene_to_obj(const scene* scn) {
                 for (auto vid : tet) {
                     group->verts.push_back(
                         {(fl_prim->pos.empty()) ? -1 : offset.pos + vid,
-                            (fl_prim->texcoord.empty()) ? -1 :
-                                                          offset.texcoord + vid,
+                            (fl_prim->texcoord.empty()) ? -1
+                                                        : offset.texcoord + vid,
                             (fl_prim->norm.empty()) ? -1 : offset.norm + vid,
                             (fl_prim->color.empty()) ? -1 : offset.color + vid,
-                            (fl_prim->radius.empty()) ? -1 :
-                                                        offset.radius + vid});
+                            (fl_prim->radius.empty()) ? -1
+                                                      : offset.radius + vid});
                 }
             }
         }
@@ -1420,8 +1425,8 @@ void load_textures(scene* scn, const std::string& dirname, bool skip_missing) {
 //
 // Loads textures for an scene.
 //
-void save_textures(const scene* scn, const std::string& dirname,
-    bool skip_missing) {
+void save_textures(
+    const scene* scn, const std::string& dirname, bool skip_missing) {
 #ifndef YOBJ_NO_IMAGE
     for (auto txt : scn->textures) {
         if (!txt->ldr && !txt->hdr) continue;
@@ -1444,7 +1449,8 @@ void save_textures(const scene* scn, const std::string& dirname,
 //
 scene* load_scene(const std::string& filename, bool load_txt, bool skip_missing,
     bool flip_texcoord, bool facet_non_smooth, bool flip_tr) {
-    auto oscn = std::unique_ptr<obj>(load_obj(filename, load_txt, skip_missing, flip_texcoord, flip_tr));
+    auto oscn = std::unique_ptr<obj>(
+        load_obj(filename, load_txt, skip_missing, flip_texcoord, flip_tr));
     return obj_to_scene(oscn.get(), facet_non_smooth);
 }
 
@@ -1454,8 +1460,8 @@ scene* load_scene(const std::string& filename, bool load_txt, bool skip_missing,
 void save_scene(const std::string& filename, const scene* scn, bool save_txt,
     bool skip_missing, bool flip_texcoord, bool flip_tr) {
     auto oscn = std::unique_ptr<yobj::obj>(scene_to_obj(scn));
-    save_obj(filename, oscn.get(), save_txt, skip_missing, flip_texcoord,
-             flip_tr);
+    save_obj(
+        filename, oscn.get(), save_txt, skip_missing, flip_texcoord, flip_tr);
 }
 
 //

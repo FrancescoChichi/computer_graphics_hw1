@@ -199,6 +199,8 @@ struct material {
     ym::vec3f kd = {0, 0, 0};
     /// specular color
     ym::vec3f ks = {0, 0, 0};
+    /// reflection color
+    ym::vec3f kr = {0, 0, 0};
     /// transmission color
     ym::vec3f kt = {0, 0, 0};
     /// roughness
@@ -213,6 +215,8 @@ struct material {
     texture* kd_txt = nullptr;
     /// specular texture
     texture* ks_txt = nullptr;
+    /// reflection texture
+    texture* kr_txt = nullptr;
     /// transmission texture
     texture* kt_txt = nullptr;
     /// roughness texture
@@ -233,6 +237,8 @@ struct material {
     texture_info kd_txt_info = {};
     /// specular texture
     texture_info ks_txt_info = {};
+    /// reflection texture
+    texture_info kr_txt_info = {};
     /// transmission texture
     texture_info kt_txt_info = {};
     /// roughness texture
@@ -432,8 +438,8 @@ void save_scene(const std::string& filename, const scene* scn,
 ///     - skip_missing: whether to skip missing textures or stops with error
 ///     - err: if set, store error message on error
 ///
-void load_textures(scene* scn, const std::string& dirname,
-    bool skip_missing = false);
+void load_textures(
+    scene* scn, const std::string& dirname, bool skip_missing = false);
 
 ///
 /// Saves textures for an scene.
@@ -444,8 +450,8 @@ void load_textures(scene* scn, const std::string& dirname,
 ///     - skip_missing: whether to skip missing textures or stops with error
 ///     - err: if set, store error message on error
 ///
-void save_textures(const scene* scn, const std::string& dirname,
-    bool skip_missing = false);
+void save_textures(
+    const scene* scn, const std::string& dirname, bool skip_missing = false);
 
 #endif
 
@@ -521,11 +527,8 @@ struct obj_vertex {
     /// Constructor (copies members initializing missing ones to -1)
     obj_vertex(int pos = -1, int texcoord = -1, int norm = -1, int color = -1,
         int radius = -1)
-        : pos(pos)
-        , texcoord(texcoord)
-        , norm(norm)
-        , color(color)
-        , radius(radius) {}
+        : pos(pos), texcoord(texcoord), norm(norm), color(color),
+          radius(radius) {}
 };
 
 ///

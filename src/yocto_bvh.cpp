@@ -31,7 +31,6 @@
 #include <algorithm>
 #include <cstdio>
 #include <unordered_map>
-#include "yocto_utils.h"
 
 namespace ybvh {
 
@@ -178,7 +177,6 @@ int add_point_shape(scene* scn, int npoints, const int* point, int nverts,
     shp->sid = (int)scn->shapes.size();
     shp->nelems = npoints;
     shp->point = (const int*)point;
-//    std::cout<<"point "<<shp->point<<std::endl;
     shp->line = nullptr;
     shp->triangle = nullptr;
     shp->tetra = nullptr;
@@ -448,11 +446,8 @@ void build_bvh(
 // Build a shape BVH. Public function whose interface is described above.
 //
 void build_shape_bvh(shape* shp, bool equalsize) {
-    std::cout<<shp->point<<std::endl;
-    std::cout<<"fatto"<<std::endl;
-
     if (shp->point) {
-      build_bvh(shp->bvh, shp->nelems, equalsize, [shp](int eid) {
+        build_bvh(shp->bvh, shp->nelems, equalsize, [shp](int eid) {
             auto f = shp->point[eid];
             return point_bbox(shp->pos[f], shp->rad(f));
         });
@@ -487,10 +482,7 @@ void build_shape_bvh(shape* shp, bool equalsize) {
 void build_scene_bvh(scene* scn, bool equalsize, bool do_shapes) {
     // do shapes
     if (do_shapes) {
-      for (auto shp : scn->shapes) {
-        //yu::logging::log_info(std::to_string(shp->sid));
-        build_shape_bvh(shp, equalsize);
-      }
+        for (auto shp : scn->shapes) build_shape_bvh(shp, equalsize);
     }
 
     // update instance bbox

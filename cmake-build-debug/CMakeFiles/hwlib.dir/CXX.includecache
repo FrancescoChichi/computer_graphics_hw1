@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image.h
 stb_image.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image.h
 stdio.h
 -
 stdarg.h
@@ -36,9 +36,9 @@ intrin.h
 arm_neon.h
 -
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image_resize.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image_resize.h
 stb_image_resize.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image_resize.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image_resize.h
 stdint.h
 -
 assert.h
@@ -50,7 +50,7 @@ math.h
 stdlib.h
 -
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image_write.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image_write.h
 stdio.h
 -
 stdarg.h
@@ -64,7 +64,7 @@ math.h
 assert.h
 -
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/tinyexr.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/tinyexr.h
 stddef.h
 -
 stdint.h
@@ -90,9 +90,9 @@ cstdint
 omp.h
 -
 zlib.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/zlib.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/zlib.h
 zfp.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/zfp.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/zfp.h
 time.h
 -
 stdio.h
@@ -110,19 +110,17 @@ utime.h
 utime.h
 -
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_bvh.cpp
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_bvh.cpp
 yocto_bvh.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_bvh.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_bvh.h
 algorithm
 -
 cstdio
 -
 unordered_map
 -
-yocto_utils.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_utils.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_bvh.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_bvh.h
 array
 -
 functional
@@ -130,11 +128,11 @@ functional
 vector
 -
 yocto_math.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_img.cpp
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_img.cpp
 yocto_img.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_img.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_img.h
 cmath
 -
 map
@@ -142,15 +140,15 @@ map
 memory
 -
 ext/stb_image.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image.h
 ext/stb_image_write.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image_write.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image_write.h
 ext/stb_image_resize.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/stb_image_resize.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/stb_image_resize.h
 ext/tinyexr.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/ext/tinyexr.h
+/home/francesco/Documents/computer_graphics_hw1/src/ext/tinyexr.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_img.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_img.h
 array
 -
 string
@@ -158,9 +156,9 @@ string
 vector
 -
 yocto_math.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 algorithm
 -
 cassert
@@ -180,9 +178,9 @@ unordered_map
 vector
 -
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_obj.cpp
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_obj.cpp
 yocto_obj.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_obj.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_obj.h
 algorithm
 -
 cassert
@@ -200,9 +198,9 @@ unordered_map
 unordered_set
 -
 yocto_img.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_img.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_img.h
 
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_obj.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_obj.h
 array
 -
 cmath
@@ -214,31 +212,5 @@ string
 vector
 -
 yocto_math.h
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_math.h
-
-/cygdrive/c/Users/franc/Documents/computer_graphics_hw1/src/yocto_utils.h
-cassert
--
-chrono
--
-deque
--
-functional
--
-future
--
-iostream
--
-map
--
-random
--
-sstream
--
-string
--
-unordered_map
--
-vector
--
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
 
