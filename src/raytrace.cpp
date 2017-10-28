@@ -7,9 +7,16 @@
 using namespace std;
 
 void printFrame(ym::frame<float,3> M){
-    cout <<M.x.x <<","<<M.y.x<<","<<M.z.x<<";"<<endl;
-    cout <<M.x.y <<","<<M.y.y<<","<<M.z.y<<";"<<endl;
-    cout <<M.x.z <<","<<M.y.z<<","<<M.z.z<<";"<<endl;
+  cout <<M.x.x <<","<<M.y.x<<","<<M.z.x<<";"<<endl;
+  cout <<M.x.y <<","<<M.y.y<<","<<M.z.y<<";"<<endl;
+  cout <<M.x.z <<","<<M.y.z<<","<<M.z.z<<";"<<endl<<endl;
+}
+
+void printFrame(ym::mat4f M){
+  cout <<M.x.x <<","<<M.y.x<<","<<M.z.x<<","<<M.w.x<<";"<<endl;
+  cout <<M.x.y <<","<<M.y.y<<","<<M.z.y<<","<<M.w.y<<";"<<endl;
+  cout <<M.x.z <<","<<M.y.z<<","<<M.z.z<<","<<M.w.z<<";"<<endl;
+  cout <<M.x.w <<","<<M.y.w<<","<<M.z.w<<","<<M.w.w<<";"<<endl<<endl;
 }
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
@@ -43,13 +50,15 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
   }
   for (auto ist : scn->instances) {
+    //printFrame(ym::to_frame(ist->xform()));
+    //printFrame(ist->xform());
 
-    printFrame(ym::to_frame(ist->xform()));
-    for (auto shp : ist->msh->shapes) {
-      ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
-                           shape_map.at(shp));
-    }
+    auto shp = ist->msh->shapes[0];
+
+    ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
+                         shape_map.at(shp));
   }
+
   ybvh::build_scene_bvh(bvh_scn);
   return bvh_scn;
 }
@@ -77,7 +86,7 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
   if(intersection){
 
     //printf("distanza %f \n", intersection.dist);
-    //yu::logging::log_info("obj: " + (scn->instances[intersection.iid]->name) );
+//    cout<<"obj: "<<scn->instances[intersection.iid]->name<<endl;
 
     auto k = scn->instances[intersection.iid]->msh->shapes[intersection.sid]->mat->kd;
     v = {k.x,k.y,k.z};
@@ -96,7 +105,7 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
   float w = h*cam->aspect;
 
   int height = resolution;
-  int width = (int)round(resolution*cam->aspect);
+  int width = round(resolution*cam->aspect);
 
   ym::image4f img = ym::image4f(width,height, ym::vec<float, 4>(255.0));
 
