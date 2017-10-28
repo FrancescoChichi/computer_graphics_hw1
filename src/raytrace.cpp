@@ -7,16 +7,18 @@
 using namespace std;
 
 void printFrame(ym::frame<float,3> M){
-  cout <<M.x.x <<","<<M.y.x<<","<<M.z.x<<";"<<endl;
-  cout <<M.x.y <<","<<M.y.y<<","<<M.z.y<<";"<<endl;
-  cout <<M.x.z <<","<<M.y.z<<","<<M.z.z<<";"<<endl<<endl;
+  printf("%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n\n",
+         M.x.x,M.y.x,M.z.x,
+          M.x.y,M.y.y,M.z.y,
+         M.x.z,M.y.z,M.z.z);
 }
 
 void printFrame(ym::mat4f M){
-  cout <<M.x.x <<","<<M.y.x<<","<<M.z.x<<","<<M.w.x<<";"<<endl;
-  cout <<M.x.y <<","<<M.y.y<<","<<M.z.y<<","<<M.w.y<<";"<<endl;
-  cout <<M.x.z <<","<<M.y.z<<","<<M.z.z<<","<<M.w.z<<";"<<endl;
-  cout <<M.x.w <<","<<M.y.w<<","<<M.z.w<<","<<M.w.w<<";"<<endl<<endl;
+  printf("%.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n\n",
+         M.x.x,M.y.x,M.z.x,M.w.x,
+         M.x.y,M.y.y,M.z.y,M.w.y,
+         M.x.z,M.y.z,M.z.z,M.w.z,
+         M.x.w,M.y.w,M.z.w,M.w.w);
 }
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
@@ -47,8 +49,8 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     } else {
       assert(false);
     }
-
   }
+
   for (auto ist : scn->instances) {
     //printFrame(ym::to_frame(ist->xform()));
     //printFrame(ist->xform());
@@ -83,7 +85,9 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
   ym::vec3f v = ym::vec3f(0,0,0);
 
+
   if(intersection){
+//    printFrame(ym::to_frame(scn->instances[intersection.iid]->xform()));
 
     //printf("distanza %f \n", intersection.dist);
 //    cout<<"obj: "<<scn->instances[intersection.iid]->name<<endl;
@@ -98,6 +102,7 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
+
 
   auto cam = scn->cameras[0];
 
@@ -152,16 +157,19 @@ int main(int argc, char** argv) {
   // load scene
   yu::logging::log_info("loading scene " + scenein);
   auto scn = yobj::load_scene(scenein, true);
+
   // add missing data
   yobj::add_normals(scn);
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
+//  scn->cameras.clear();
   yobj::add_default_camera(scn);
 
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
   yu::logging::log_info("bvh created");
+
 
   // raytrace
   yu::logging::log_info("tracing scene");
