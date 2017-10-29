@@ -54,11 +54,26 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
   for (auto ist : scn->instances) {
     //printFrame(ym::to_frame(ist->xform()));
     //printFrame(ist->xform());
-
     auto shp = ist->msh->shapes[0];
+//    shp->pos;
+//    ym::to_frame(ist->xform())
+//    ist->translation=shp->pos[0];
 
-    ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
+    /// translation
+    ym::vec3f t = shp->pos[0];
+    /// rotation
+
+    ym::quat4f rotation = {0,0,0,1};
+    ///xform
+    ym::mat4f shape_frame = ym::translation_mat4(t) * ym::rotation_mat4(rotation) *
+        ym::scaling_mat4(ist->scale) * ist->matrix;
+
+    printFrame(shape_frame);
+
+
+    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(shape_frame),
                          shape_map.at(shp));
+    ybvh::set_instance_frame(bvh_scn,iid,ym::to_frame(shape_frame));
   }
 
   ybvh::build_scene_bvh(bvh_scn);
@@ -90,9 +105,10 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 //    printFrame(ym::to_frame(scn->instances[intersection.iid]->xform()));
 
     //printf("distanza %f \n", intersection.dist);
-//    cout<<"obj: "<<scn->instances[intersection.iid]->name<<endl;
+//    if(intersection.iid)
+//      cout<<"obj: "<<scn->instances[intersection.iid]->name<<endl;
 
-    auto k = scn->instances[intersection.iid]->msh->shapes[intersection.sid]->mat->kd;
+    auto k = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
     v = {k.x,k.y,k.z};
   }
 
@@ -164,7 +180,10 @@ int main(int argc, char** argv) {
   yobj::add_instances(scn);
 //  scn->cameras.clear();
   yobj::add_default_camera(scn);
+//  scn->cameras[0]->translation.z+=1.8;
+//  scn->cameras[0]->translation.y+=1.8;
 
+//  scn->cameras[0]->rotation.y+=0.1;
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
