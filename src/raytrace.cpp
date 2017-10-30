@@ -6,6 +6,7 @@
 #include "yocto_utils.h"
 using namespace std;
 vector<yobj::shape*> lights= vector<yobj::shape*>{};
+float epsilon = 1e-6;
 
 void printFrame(const ym::frame<float,3>& M){
   printf("%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n\n",
@@ -95,7 +96,7 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
    - (camera_pos.z);
 
   auto d = q-camera_pos.o;
-  ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d),1e-3);
+  ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d),epsilon);
 
   return ray;
 }
@@ -104,31 +105,34 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
 
-  ym::vec4f v = ym::vec4f(0,0,0,1);
+  ym::vec4f c = ym::vec4f(0,0,0,1);
 
   if(intersection){
-    auto kd = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
+    auto mat = scn->instances[intersection.iid]->msh->shapes[0]->mat;
+    auto shp = scn->instances[intersection.iid]->msh->shapes[0];
+    auto n =  shp->norm[intersection.eid];
+    auto p = shp->pos[intersection.eid];
 
-//    for(auto light:lights){
-      auto light = lights[0];
-      auto shp = scn->instances[intersection.iid]->msh->shapes[0];
-      auto n =  shp->norm[intersection.eid];
-      auto p = shp->pos[intersection.eid];
+    for(auto light:lights){
       auto l = normalize(light->pos[0]-p);
       auto r = length(light->pos[0]-p);
-
-      ym::ray3f sr = ym::ray3f{p,l,1e-3,r};
+      ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
       auto shadow = ybvh::intersect_scene(bvh, sr, false);
-      if(false&&shadow.sid==intersection.sid) {
-        //kd = {0, 0, 0};
+      if(shadow.sid==intersection.sid&&shadow.eid==intersection.eid)
+        continue;
+      else {
+        auto In = light->mat->ke / (r * r);
+        auto v = normalize(scn->cameras[0]->translation-p);
+        auto h = ym::normalize((v+l));
+        auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
+        c.xyz() += mat->kd * In * max(.0f, dot(n, l))
+                 + mat->ks * In * pow(max(.0f,dot(n,h)),ns);
       }
-      else
-        kd += kd * light->mat->ke/(r*r) * max(.0f, dot(n,l));
-//    }
-    v = {kd.x,kd.y,kd.z,1};
+    }
+    //v = {c.x,c.y,c.z,1};
   }
 
-  return {v.x, v.y, v.z, 1};
+  return {c.x, c.y, c.z, 1};
 }
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
