@@ -6,14 +6,30 @@
 #include "yocto_utils.h"
 using namespace std;
 
-void printFrame(ym::frame<float,3> M){
-  printf("%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n\n",
+void printFrame(const ym::frame<float,3>& M){
+  printf("%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n\n",
          M.x.x,M.y.x,M.z.x,
           M.x.y,M.y.y,M.z.y,
-         M.x.z,M.y.z,M.z.z);
+         M.x.z,M.y.z,M.z.z,
+         M.o.z,M.o.z,M.o.z);
 }
 
-void printFrame(ym::mat4f M){
+void printFrame(const ym::vec4f& M){
+  printf("%.6g,%.6g,%.6g,%.6g;\n\n",
+         M.x,M.y,M.z,M.w);
+}
+
+void printFrame(const ym::vec3f& M){
+  printf("%.6g,%.6g,%.6g;\n\n",
+         M.x,M.y,M.z);
+}
+
+void printFrame(const ym::quat4f& M){
+  printf("%.6g,%.6g,%.6g,%.6g;\n\n",
+         M.x,M.y,M.z,M.w);
+}
+
+void printFrame(const ym::mat4f& M){
   printf("%.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n\n",
          M.x.x,M.y.x,M.z.x,M.w.x,
          M.x.y,M.y.y,M.z.y,M.w.y,
@@ -52,27 +68,11 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
   }
 
   for (auto ist : scn->instances) {
-    //printFrame(ym::to_frame(ist->xform()));
-    //printFrame(ist->xform());
+
     auto shp = ist->msh->shapes[0];
-//    shp->pos;
-//    ym::to_frame(ist->xform())
-//    ist->translation=shp->pos[0];
 
-    /// translation
-    ym::vec3f t = shp->pos[0];
-    /// rotation
-
-    ym::quat4f rotation = {0,0,0,1};
-    ///xform
-    ym::mat4f shape_frame = ym::translation_mat4(t) * ym::rotation_mat4(rotation) *
-        ym::scaling_mat4(ist->scale) * ist->matrix;
-
-    printFrame(shape_frame);
-
-    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
+    ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
-    ybvh::set_instance_frame(bvh_scn,iid,ym::to_frame(shape_frame));
   }
 
   ybvh::build_scene_bvh(bvh_scn);
@@ -81,11 +81,12 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
 
 ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
-  auto camera_pos = ym::to_frame(cam->xform());
+  // auto camera_pos = ym::to_frame(cam->xform());
+  auto camera_pos = ym::to_frame(cam->matrix);
   auto q = camera_pos.o
    + ((u - .5f)*w*camera_pos.x)
    + ((v - .5f)*h*camera_pos.y)
-   - (cam->focus*camera_pos.z);
+   - (camera_pos.z);
 
   auto d = q-camera_pos.o;
   ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d));
@@ -93,41 +94,31 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
   return ray;
 }
 
-ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
+ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
 
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
 
-  ym::vec3f v = ym::vec3f(0,0,0);
-
+  ym::vec4f v = ym::vec4f(0,0,0,1);
 
   if(intersection){
-//    printFrame(ym::to_frame(scn->instances[intersection.iid]->xform()));
-
-    //printf("distanza %f \n", intersection.dist);
-//    if(intersection.iid)
-//      cout<<"obj: "<<scn->instances[intersection.iid]->name<<endl;
-
     auto k = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
-    v = {k.x,k.y,k.z};
+    v = {k.x,k.y,k.z,1};
   }
 
-  return v;
-
+  return {v.x, v.y, v.z, 1};
 }
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
-
-
   auto cam = scn->cameras[0];
 
   float h = 2*tan(cam->yfov/2);
   float w = h*cam->aspect;
 
   int height = resolution;
-  int width = round(resolution*cam->aspect);
+  int width = (int)round(resolution*cam->aspect);
 
-  ym::image4f img = ym::image4f(width,height, ym::vec<float, 4>(255.0));
+  ym::image4f img = ym::image4f(width,height, {0,0,0,0});
 
   /// antialiased with n^2 samplers per pixel
   for(int j = 0; j<height; j++) {
@@ -135,11 +126,11 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
       auto u = (i +0.5f) / width;
       auto v = (j +0.5f) / height;
       auto ray = camera_ray(cam, u, v, w, h);
-      img[{i,j}].xyz() = compute_color(bvh, scn, ray);
+      img[{i,j}] = compute_color(bvh, scn, ray);
     }
   }
 
-  return {img};
+  return img;
 }
 
 
@@ -177,17 +168,12 @@ int main(int argc, char** argv) {
   yobj::add_normals(scn);
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
-//  scn->cameras.clear();
-  yobj::add_default_camera(scn);
-//  scn->cameras[0]->translation.z+=1.8;
-//  scn->cameras[0]->translation.y+=1.8;
+//  yobj::add_default_camera(scn);
 
-//  scn->cameras[0]->rotation.y+=0.1;
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
   yu::logging::log_info("bvh created");
-
 
   // raytrace
   yu::logging::log_info("tracing scene");
