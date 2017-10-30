@@ -5,6 +5,7 @@
 #include "yocto_obj.h"
 #include "yocto_utils.h"
 using namespace std;
+vector<yobj::shape*> lights= vector<yobj::shape*>{};
 
 void printFrame(const ym::frame<float,3>& M){
   printf("%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n\n",
@@ -47,6 +48,8 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     auto shape=mesh->shapes[0];
 
     if (!shape->points.empty()) {
+      lights.push_back(shape);
+      continue;
       shape_map[shape] = ybvh::add_point_shape(bvh_scn,
                                                (int) shape->points.size(), shape->points.data(),
                                                (int) shape->pos.size(), shape->pos.data(),
@@ -71,6 +74,9 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
     auto shp = ist->msh->shapes[0];
 
+    if(shp->points.size())
+      continue;
+
     ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
   }
@@ -89,7 +95,7 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
    - (camera_pos.z);
 
   auto d = q-camera_pos.o;
-  ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d));
+  ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d),1e-3);
 
   return ray;
 }
@@ -101,8 +107,25 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
   ym::vec4f v = ym::vec4f(0,0,0,1);
 
   if(intersection){
-    auto k = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
-    v = {k.x,k.y,k.z,1};
+    auto kd = scn->instances[intersection.iid]->msh->shapes[0]->mat->kd;
+
+//    for(auto light:lights){
+      auto light = lights[0];
+      auto shp = scn->instances[intersection.iid]->msh->shapes[0];
+      auto n =  shp->norm[intersection.eid];
+      auto p = shp->pos[intersection.eid];
+      auto l = normalize(light->pos[0]-p);
+      auto r = length(light->pos[0]-p);
+
+      ym::ray3f sr = ym::ray3f{p,l,1e-3,r};
+      auto shadow = ybvh::intersect_scene(bvh, sr, false);
+      if(false&&shadow.sid==intersection.sid) {
+        //kd = {0, 0, 0};
+      }
+      else
+        kd += kd * light->mat->ke/(r*r) * max(.0f, dot(n,l));
+//    }
+    v = {kd.x,kd.y,kd.z,1};
   }
 
   return {v.x, v.y, v.z, 1};
@@ -118,15 +141,21 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
   int height = resolution;
   int width = (int)round(resolution*cam->aspect);
 
+  int norm = samples*samples;
   ym::image4f img = ym::image4f(width,height, {0,0,0,0});
 
   /// antialiased with n^2 samplers per pixel
   for(int j = 0; j<height; j++) {
     for(int i = 0; i<width; i++) {
-      auto u = (i +0.5f) / width;
-      auto v = (j +0.5f) / height;
-      auto ray = camera_ray(cam, u, v, w, h);
-      img[{i,j}] = compute_color(bvh, scn, ray);
+      for(int sj=0; sj<samples;sj++) {
+        for (int si = 0; si < samples; si++) {
+          auto u = (i + (si+0.5f)/samples) / width;
+          auto v = (j + (sj+0.5f)/samples) / height;
+          auto ray = camera_ray(cam, u, v, w, h);
+          img[{i, j}] += compute_color(bvh,scn,ray);
+        }
+      }
+      img[{i, j}] /= {norm,norm,norm,1};
     }
   }
 
