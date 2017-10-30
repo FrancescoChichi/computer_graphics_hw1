@@ -51,10 +51,6 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     if (!shape->points.empty()) {
       lights.push_back(shape);
       continue;
-      shape_map[shape] = ybvh::add_point_shape(bvh_scn,
-                                               (int) shape->points.size(), shape->points.data(),
-                                               (int) shape->pos.size(), shape->pos.data(),
-                                               shape->radius.data());
     } else if (!shape->lines.empty()) {
       shape_map[shape] = ybvh::add_line_shape(bvh_scn,
                                               (int) shape->lines.size(), shape->lines.data(),
@@ -75,11 +71,12 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
     auto shp = ist->msh->shapes[0];
 
-    if(shp->points.size())
+    if(!shp->points.empty())
       continue;
 
     ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
+
   }
 
   ybvh::build_scene_bvh(bvh_scn);
@@ -88,8 +85,8 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
 
 ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
-  // auto camera_pos = ym::to_frame(cam->xform());
-  auto camera_pos = ym::to_frame(cam->matrix);
+
+  auto camera_pos = ym::to_frame(cam->xform());
   auto q = camera_pos.o
    + ((u - .5f)*w*camera_pos.x)
    + ((v - .5f)*h*camera_pos.y)
@@ -105,7 +102,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
 
-  ym::vec4f c = ym::vec4f(0,0,0,1);
+  ym::vec4f c = ym::vec4f(0,0,0,0);
 
   if(intersection){
     auto mat = scn->instances[intersection.iid]->msh->shapes[0]->mat;
@@ -116,23 +113,25 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
     for(auto light:lights){
       auto l = normalize(light->pos[0]-p);
       auto r = length(light->pos[0]-p);
-      ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
-      auto shadow = ybvh::intersect_scene(bvh, sr, false);
-      if(shadow.sid==intersection.sid&&shadow.eid==intersection.eid)
-        continue;
-      else {
+
+//      ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
+//      auto shadow = ybvh::intersect_scene(bvh, sr, false);
+//      if(shadow.sid==intersection.sid&&shadow.eid==intersection.eid)
+//        continue;
+//      else {
         auto In = light->mat->ke / (r * r);
-        auto v = normalize(scn->cameras[0]->translation-p);
+        auto v = normalize(p-ray.o);
         auto h = ym::normalize((v+l));
         auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
         c.xyz() += mat->kd * In * max(.0f, dot(n, l))
                  + mat->ks * In * pow(max(.0f,dot(n,h)),ns);
-      }
+//      }
     }
-    //v = {c.x,c.y,c.z,1};
   }
+  else
+    c={255,255,0,1};
 
-  return {c.x, c.y, c.z, 1};
+  return {c.x, c.y, c.z, 0};
 }
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
@@ -145,8 +144,8 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
   int height = resolution;
   int width = (int)round(resolution*cam->aspect);
 
-  int norm = samples*samples;
-  ym::image4f img = ym::image4f(width,height, {0,0,0,0});
+  float norm = samples*samples;
+  ym::image4f img = ym::image4f(width,height, {0,0,0,1});
 
   /// antialiased with n^2 samplers per pixel
   for(int j = 0; j<height; j++) {
@@ -201,7 +200,7 @@ int main(int argc, char** argv) {
   yobj::add_normals(scn);
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
-//  yobj::add_default_camera(scn);
+  //yobj::add_default_camera(scn);
 
   // create bvh
   yu::logging::log_info("creating bvh");
