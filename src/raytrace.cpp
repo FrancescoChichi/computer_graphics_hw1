@@ -70,8 +70,7 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
     printFrame(shape_frame);
 
-
-    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(shape_frame),
+    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
     ybvh::set_instance_frame(bvh_scn,iid,ym::to_frame(shape_frame));
   }

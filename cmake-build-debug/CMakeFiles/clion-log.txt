@@ -1,5 +1,5 @@
-/home/francesco/clion-2017.2.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/francesco/Documenti/computer_graphics_hw1
--- The C compiler identification is GNU 5.4.0
+/home/francesco/clion-2017.2.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/francesco/Documents/computer_graphics_hw1
+-- The C compiler identification is GNU 7.2.0
 -- The CXX compiler identification is GNU 7.2.0
 -- Check for working C compiler: /usr/bin/cc
 -- Check for working C compiler: /usr/bin/cc -- works
@@ -15,4 +15,4 @@
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/francesco/Documenti/computer_graphics_hw1/cmake-build-debug
+-- Build files have been written to: /home/francesco/Documents/computer_graphics_hw1/cmake-build-debug
