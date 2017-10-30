@@ -13,7 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ddae8cfe-2a7c-4414-be00-9ac8a9d1dd12" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/raytrace.dir/src/raytrace.cpp.o" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/raytrace.dir/src/raytrace.cpp.o" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/raytrace.dir/src/raytrace.cpp.o" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/basic.png" afterPath="$PROJECT_DIR$/out/basic.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/raytrace.cpp" afterPath="$PROJECT_DIR$/src/raytrace.cpp" />
@@ -31,33 +31,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="raytrace.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="raytrace.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/raytrace.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="73" column="28" lean-forward="false" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
+            <state relative-caret-position="254">
+              <caret line="174" column="28" lean-forward="false" selection-start-line="174" selection-start-column="28" selection-end-line="174" selection-end-column="28" />
               <folding>
-                <element signature="e#4322#4533#0" expanded="false" />
+                <element signature="e#4345#4556#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="yocto_obj.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="yocto_obj.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/yocto_obj.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2">
-              <caret line="260" column="7" lean-forward="false" selection-start-line="260" selection-start-column="7" selection-end-line="260" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="yocto_obj.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/yocto_obj.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="1555" column="5" lean-forward="false" selection-start-line="1555" selection-start-column="5" selection-end-line="1555" selection-end-column="5" />
+            <state relative-caret-position="299">
+              <caret line="825" column="13" lean-forward="true" selection-start-line="825" selection-start-column="13" selection-end-line="825" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -66,8 +56,18 @@
       <file leaf-file-name="yocto_bvh.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/yocto_bvh.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="258">
-              <caret line="233" column="16" lean-forward="false" selection-start-line="233" selection-start-column="16" selection-end-line="233" selection-end-column="16" />
+            <state relative-caret-position="213">
+              <caret line="294" column="5" lean-forward="false" selection-start-line="294" selection-start-column="5" selection-end-line="294" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="yocto_math.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/yocto_math.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="262">
+              <caret line="410" column="6" lean-forward="false" selection-start-line="410" selection-start-column="6" selection-end-line="410" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -76,8 +76,8 @@
       <file leaf-file-name="yocto_bvh.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/yocto_bvh.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="268" column="4" lean-forward="false" selection-start-line="268" selection-start-column="4" selection-end-line="268" selection-end-column="4" />
+            <state relative-caret-position="202">
+              <caret line="484" column="46" lean-forward="false" selection-start-line="484" selection-start-column="37" selection-end-line="484" selection-end-column="46" />
               <folding>
                 <element signature="e#1337#1359#0" expanded="true" />
               </folding>
@@ -101,6 +101,7 @@
       <find>obj</find>
       <find>+=</find>
       <find>-=</find>
+      <find>build_sha</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -112,6 +113,7 @@
         <option value="$PROJECT_DIR$/src/yocto_obj.cpp" />
         <option value="$PROJECT_DIR$/src/yocto_bvh.cpp" />
         <option value="$PROJECT_DIR$/src/yocto_obj.h" />
+        <option value="$PROJECT_DIR$/src/yocto_math.h" />
         <option value="$PROJECT_DIR$/src/raytrace.cpp" />
       </list>
     </option>
@@ -403,12 +405,13 @@
       <workItem from="1509191606027" duration="85000" />
       <workItem from="1509191707567" duration="16863000" />
       <workItem from="1509291145823" duration="5065000" />
-      <workItem from="1509296223656" duration="381000" />
+      <workItem from="1509296223656" duration="941000" />
+      <workItem from="1509317134256" duration="5289000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55291000" />
+    <option name="totallyTimeSpent" value="61140000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="48" y="24" width="1875" height="1098" extended-state="6" />
@@ -416,7 +419,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.106246665" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17276423" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32317072" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -481,7 +484,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -533,7 +536,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -577,7 +580,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -629,7 +632,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -681,7 +684,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -717,7 +720,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -743,7 +746,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -769,7 +772,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -795,7 +798,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -856,40 +859,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/yocto_math.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="2091" column="33" lean-forward="false" selection-start-line="2091" selection-start-column="33" selection-end-line="2091" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/yocto_obj.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="1555" column="5" lean-forward="false" selection-start-line="1555" selection-start-column="5" selection-end-line="1555" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/yocto_obj.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2">
-          <caret line="260" column="7" lean-forward="false" selection-start-line="260" selection-start-column="7" selection-end-line="260" selection-end-column="7" />
+        <state relative-caret-position="262">
+          <caret line="410" column="6" lean-forward="false" selection-start-line="410" selection-start-column="6" selection-end-line="410" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/yocto_bvh.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="233" column="16" lean-forward="false" selection-start-line="233" selection-start-column="16" selection-end-line="233" selection-end-column="16" />
+        <state relative-caret-position="213">
+          <caret line="294" column="5" lean-forward="false" selection-start-line="294" selection-start-column="5" selection-end-line="294" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/yocto_bvh.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="268" column="4" lean-forward="false" selection-start-line="268" selection-start-column="4" selection-end-line="268" selection-end-column="4" />
+        <state relative-caret-position="202">
+          <caret line="484" column="46" lean-forward="false" selection-start-line="484" selection-start-column="37" selection-end-line="484" selection-end-column="46" />
           <folding>
             <element signature="e#1337#1359#0" expanded="true" />
           </folding>
@@ -898,11 +885,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/raytrace.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="73" column="28" lean-forward="false" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="28" />
+        <state relative-caret-position="254">
+          <caret line="174" column="28" lean-forward="false" selection-start-line="174" selection-start-column="28" selection-end-line="174" selection-end-column="28" />
           <folding>
-            <element signature="e#4322#4533#0" expanded="false" />
+            <element signature="e#4345#4556#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/yocto_obj.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2862">
+          <caret line="1055" column="64" lean-forward="true" selection-start-line="1055" selection-start-column="64" selection-end-line="1055" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/yocto_obj.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="825" column="13" lean-forward="true" selection-start-line="825" selection-start-column="13" selection-end-line="825" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>

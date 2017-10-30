@@ -61,19 +61,15 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
     /// translation
     ym::vec3f t = shp->pos[0];
-    /// rotation
+    ym::mat4f shape_frame = ym::translation_mat4(t);
+//    printFrame(shape_frame);
 
-    ym::quat4f rotation = {0,0,0,1};
-    ///xform
-    ym::mat4f shape_frame = ym::translation_mat4(t) * ym::rotation_mat4(rotation) *
-        ym::scaling_mat4(ist->scale) * ist->matrix;
+//    ist->translation=t;
 
-    printFrame(shape_frame);
-
-
-    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(shape_frame),
+    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
     ybvh::set_instance_frame(bvh_scn,iid,ym::to_frame(shape_frame));
+
   }
 
   ybvh::build_scene_bvh(bvh_scn);
@@ -119,8 +115,12 @@ ym::vec3f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
                      const ym::vec3f& amb, int resolution, int samples) {
 
+//  scn->cameras[0]->translation.z+=10;
+//  scn->cameras[0]->translation.y+=1;
+//  scn->cameras[0]->rotation.y+=0.4;
 
   auto cam = scn->cameras[0];
+  printFrame(cam->xform());
 
   float h = 2*tan(cam->yfov/2);
   float w = h*cam->aspect;
@@ -180,6 +180,7 @@ int main(int argc, char** argv) {
   yobj::add_instances(scn);
 //  scn->cameras.clear();
   yobj::add_default_camera(scn);
+
 //  scn->cameras[0]->translation.z+=1.8;
 //  scn->cameras[0]->translation.y+=1.8;
 
