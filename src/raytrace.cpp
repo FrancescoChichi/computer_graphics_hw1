@@ -6,7 +6,7 @@
 #include "yocto_utils.h"
 using namespace std;
 vector<yobj::shape*> lights= vector<yobj::shape*>{};
-float epsilon = 1e-6;
+float epsilon = 1e-3;
 
 void printFrame(const ym::frame<float,3>& M){
   printf("%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n\n",
@@ -51,6 +51,7 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     if (!shape->points.empty()) {
       lights.push_back(shape);
       continue;
+
     } else if (!shape->lines.empty()) {
       shape_map[shape] = ybvh::add_line_shape(bvh_scn,
                                               (int) shape->lines.size(), shape->lines.data(),
@@ -74,9 +75,10 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     if(!shp->points.empty())
       continue;
 
-    ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
+//    auto new_frame = ym::inverse(ym::to_frame(scn->cameras[0]->matrix))*ym::to_frame(ist->matrix);
+    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(ist->matrix),
                          shape_map.at(shp));
-
+//    ybvh::set_instance_frame(bvh_scn,iid,new_frame);
   }
 
   ybvh::build_scene_bvh(bvh_scn);
@@ -85,12 +87,16 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
 
 ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
+//printFrame(ym::to_frame(cam->matrix));
+  auto camera_pos = (ym::to_frame(cam->matrix));
+  //auto camera_pos = ym::to_frame(ym::identity_mat4f);
 
-  auto camera_pos = ym::to_frame(cam->xform());
   auto q = camera_pos.o
    + ((u - .5f)*w*camera_pos.x)
    + ((v - .5f)*h*camera_pos.y)
    - (camera_pos.z);
+
+  //camera_pos = ym::inverse(ym::to_frame(cam->matrix));
 
   auto d = q-camera_pos.o;
   ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d),epsilon);
@@ -105,7 +111,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
 //  ym::ray3f r = ym::ray3f(ym::transform_ray(ym::to_frame(scn->instances[intersection.iid]->xform()),ray));
 
-  ym::vec4f c = ym::vec4f(0,0,0,0);
+  ym::vec4f c = ym::vec4f(0,0,0,1);
 
   if(intersection){
     auto mat = scn->instances[intersection.iid]->msh->shapes[0]->mat;
@@ -114,6 +120,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
     auto p = shp->pos[intersection.eid];
 
     for(auto light:lights){
+
       auto l = normalize(light->pos[0]-p);
       auto r = length(light->pos[0]-p);
 
@@ -126,8 +133,9 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 //        auto v = normalize(ray.o-p);
 //        auto h = ym::normalize((v+l));
 //        auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
-        c.xyz() += mat->kd * In * max(.0f, dot(n, l));
-//                 + mat->ks * In * pow(max(.0f,dot(n,h)),ns);
+
+        c.xyz() += mat->kd * In * max(.0f, fabs(dot(n, l)));
+//                 + mat->ks * In * pow(max(.0f,fabs(dot(n,h)),ns);
 //      }
     }
   }
@@ -203,7 +211,8 @@ int main(int argc, char** argv) {
   yobj::add_normals(scn);
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
-  //yobj::add_default_camera(scn);
+//  scn->cameras.clear();
+//  yobj::add_default_camera(scn);
 
   // create bvh
   yu::logging::log_info("creating bvh");
