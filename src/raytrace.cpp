@@ -102,6 +102,9 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
 
+
+//  ym::ray3f r = ym::ray3f(ym::transform_ray(ym::to_frame(scn->instances[intersection.iid]->xform()),ray));
+
   ym::vec4f c = ym::vec4f(0,0,0,0);
 
   if(intersection){
@@ -120,11 +123,11 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 //        continue;
 //      else {
         auto In = light->mat->ke / (r * r);
-        auto v = normalize(p-ray.o);
-        auto h = ym::normalize((v+l));
-        auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
-        c.xyz() += mat->kd * In * max(.0f, dot(n, l))
-                 + mat->ks * In * pow(max(.0f,dot(n,h)),ns);
+//        auto v = normalize(ray.o-p);
+//        auto h = ym::normalize((v+l));
+//        auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
+        c.xyz() += mat->kd * In * max(.0f, dot(n, l));
+//                 + mat->ks * In * pow(max(.0f,dot(n,h)),ns);
 //      }
     }
   }
