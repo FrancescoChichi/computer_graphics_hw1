@@ -1,0 +1,92 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		5125062A1FAA05F3006F0D43 /* ext */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ext; path = ../src/ext; sourceTree = "<group>"; };
+		5125062B1FAA05F3006F0D43 /* printData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = printData.h; path = ../src/printData.h; sourceTree = "<group>"; };
+		5125062C1FAA05F3006F0D43 /* raytrace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = raytrace.cpp; path = ../src/raytrace.cpp; sourceTree = "<group>"; };
+		5125062D1FAA05F3006F0D43 /* yocto_bvh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = yocto_bvh.cpp; path = ../src/yocto_bvh.cpp; sourceTree = "<group>"; };
+		5125062E1FAA05F3006F0D43 /* yocto_bvh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = yocto_bvh.h; path = ../src/yocto_bvh.h; sourceTree = "<group>"; };
+		5125062F1FAA05F3006F0D43 /* yocto_img.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = yocto_img.cpp; path = ../src/yocto_img.cpp; sourceTree = "<group>"; };
+		512506301FAA05F3006F0D43 /* yocto_img.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = yocto_img.h; path = ../src/yocto_img.h; sourceTree = "<group>"; };
+		512506311FAA05F3006F0D43 /* yocto_math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = yocto_math.h; path = ../src/yocto_math.h; sourceTree = "<group>"; };
+		512506321FAA05F3006F0D43 /* yocto_obj.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = yocto_obj.cpp; path = ../src/yocto_obj.cpp; sourceTree = "<group>"; };
+		512506331FAA05F3006F0D43 /* yocto_obj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = yocto_obj.h; path = ../src/yocto_obj.h; sourceTree = "<group>"; };
+		512506341FAA05F3006F0D43 /* yocto_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = yocto_utils.h; path = ../src/yocto_utils.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		512506231FAA05D3006F0D43 = {
+			isa = PBXGroup;
+			children = (
+				5125062A1FAA05F3006F0D43 /* ext */,
+				5125062B1FAA05F3006F0D43 /* printData.h */,
+				5125062C1FAA05F3006F0D43 /* raytrace.cpp */,
+				5125062D1FAA05F3006F0D43 /* yocto_bvh.cpp */,
+				5125062E1FAA05F3006F0D43 /* yocto_bvh.h */,
+				5125062F1FAA05F3006F0D43 /* yocto_img.cpp */,
+				512506301FAA05F3006F0D43 /* yocto_img.h */,
+				512506311FAA05F3006F0D43 /* yocto_math.h */,
+				512506321FAA05F3006F0D43 /* yocto_obj.cpp */,
+				512506331FAA05F3006F0D43 /* yocto_obj.h */,
+				512506341FAA05F3006F0D43 /* yocto_utils.h */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		512506241FAA05D3006F0D43 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+			};
+			buildConfigurationList = 512506271FAA05D3006F0D43 /* Build configuration list for PBXProject "hw1" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 512506231FAA05D3006F0D43;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		512506281FAA05D3006F0D43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		512506291FAA05D3006F0D43 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		512506271FAA05D3006F0D43 /* Build configuration list for PBXProject "hw1" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				512506281FAA05D3006F0D43 /* Debug */,
+				512506291FAA05D3006F0D43 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 512506241FAA05D3006F0D43 /* Project object */;
+}

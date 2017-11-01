@@ -10,6 +10,17 @@ using namespace std;
 vector<yobj::shape*> lights= vector<yobj::shape*>{};
 float epsilon = 1e-3;
 
+ym::vec3f normal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
+  auto t = msh->shapes[0]->triangles[eid];
+  return ym::normalize(euv.x * msh->shapes[0]->norm[t.x] +
+                   euv.y * msh->shapes[0]->norm[t.y] + euv.z * msh->shapes[0]->norm[t.z]);
+}
+ym::vec3f position(const yobj::mesh* msh, int eid, ym::vec3f euv) {
+  auto t = msh->shapes[0]->triangles[eid];
+  return (euv.x * msh->shapes[0]->pos[t.x] + euv.y * msh->shapes[0]->pos[t.y] +
+         euv.z * msh->shapes[0]->pos[t.z]);
+}
+
 ybvh::scene* make_bvh(yobj::scene* scn) {
 
   ybvh::scene* bvh_scn = ybvh::make_scene();
@@ -56,6 +67,12 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
   return bvh_scn;
 }
 
+void ray_triangle_intersection(ym::vec3f v0,ym::vec3f v1,ym::vec3f v2, ym::ray3f r){
+  //auto v2 = r.o - v0;
+  auto e1 = v1 - v0;
+  ym::vec3f e2 = v2 - v0;
+  auto n = ym::dot(ym::cross(r.d,e2),e1);
+}
 
 ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
 //printFrame(ym::to_frame(cam->matrix));
@@ -84,29 +101,35 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
   ym::vec4f c = ym::vec4f(0,0,0,1);
 
   if(intersection){
-    auto mat = scn->instances[intersection.iid]->msh->shapes[0]->mat;
-    auto shp = scn->instances[intersection.iid]->msh->shapes[0];
-    auto n =  shp->norm[intersection.eid];
-    auto p = shp->pos[intersection.eid];
+
+    auto ist = scn->instances[intersection.iid];
+    auto mat = ist->msh->shapes[0]->mat;
+    auto shp = ist->msh->shapes[0];
+    auto msh = ist->msh;
+
+    auto n =  normal(msh,intersection.eid,intersection.euv.xyz());
+    auto p = position(msh,intersection.eid,intersection.euv.xyz());
+//    auto n =  shp->norm[intersection.eid];
+   // auto p = shp->pos[intersection.eid];
 
     for(auto light:lights){
 
       auto l = normalize(light->pos[0]-p);
       auto r = length(light->pos[0]-p);
 
-//      ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
-//      auto shadow = ybvh::intersect_scene(bvh, sr, false);
-//      if(shadow.sid==intersection.sid&&shadow.eid==intersection.eid)
-//        continue;
-//      else {
+      ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
+      auto shadow = ybvh::intersect_scene(bvh, sr, false);
+      if(shadow.sid==intersection.sid&&shadow.eid==intersection.eid)
+        continue;
+      else {
         auto In = light->mat->ke / (r * r);
-//        auto v = normalize(ray.o-p);
-//        auto h = ym::normalize((v+l));
-//        auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
+        auto v = normalize(ray.o-p);
+        auto h = ym::normalize((v+l));
+        auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
-        c.xyz() += mat->kd * In * max(.0f, fabs(dot(n, l)));
-//                 + mat->ks * In * pow(max(.0f,fabs(dot(n,h)),ns);
-//      }
+        c.xyz() += mat->kd * In * max(.0f, fabs(dot(n, l)))
+                 + mat->ks * In * pow(max(.0f,fabs(dot(n,h))),ns);
+      }
     }
   }
   else
@@ -184,28 +207,19 @@ int main(int argc, char** argv) {
 //  scn->cameras.clear();
 //  yobj::add_default_camera(scn);
 
-  auto cam = scn->cameras[0];
-//  printMatrix((cam->matrix));
-//  printMatrix(ym::translation_mat4(cam->translation) * ym::rotation_mat4(cam->rotation) *
-//                 cam->matrix);
-//  printMatrix(cam->xform());
-  cerr<<"fuori"<<endl;
-  ym::vec3f translation = {0, 0, 0};
-  printVec(translation);
-  printMatrix(ym::translation_mat4(translation));
-cam->xform();
-//  // create bvh
-//  yu::logging::log_info("creating bvh");
-//  auto bvh = make_bvh(scn);
-//  yu::logging::log_info("bvh created");
-//
-//  // raytrace
-//  yu::logging::log_info("tracing scene");
-//  auto hdr = (parallel)
-//             ? raytrace_mt(scn, bvh, {amb, amb, amb}, resolution, samples)
-//             : raytrace(scn, bvh, {amb, amb, amb}, resolution, samples);
-//  // tonemap and save
-//  yu::logging::log_info("saving image " + imageout);
-//  auto ldr = ym::tonemap_image(hdr, ym::tonemap_type::srgb, 0, 2.2);
-//  yimg::save_image4b(imageout, ldr);
+
+  // create bvh
+  yu::logging::log_info("creating bvh");
+  auto bvh = make_bvh(scn);
+  yu::logging::log_info("bvh created");
+
+  // raytrace
+  yu::logging::log_info("tracing scene");
+  auto hdr = (parallel)
+             ? raytrace_mt(scn, bvh, {amb, amb, amb}, resolution, samples)
+             : raytrace(scn, bvh, {amb, amb, amb}, resolution, samples);
+  // tonemap and save
+  yu::logging::log_info("saving image " + imageout);
+  auto ldr = ym::tonemap_image(hdr, ym::tonemap_type::srgb, 0, 2.2);
+  yimg::save_image4b(imageout, ldr);
 }

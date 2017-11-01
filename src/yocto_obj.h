@@ -348,25 +348,9 @@ namespace yobj {
     float focus = 1;
     /// lens aperture
     float aperture = 0;
-    void printMatrix(const ym::mat4f& M) const{
-      printf("%.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n\n",
-             M.x.x,M.y.x,M.z.x,M.w.x,
-             M.x.y,M.y.y,M.z.y,M.w.y,
-             M.x.z,M.y.z,M.z.z,M.w.z,
-             M.x.w,M.y.w,M.z.w,M.w.w);
-    }
-
-    void printVec(const ym::vec3f& M) const{
-      printf("%.6g,%.6g,%.6g;\n\n",
-             M.x,M.y,M.z);
-    }
+   
     /// xform
     ym::mat4f xform() const {
-      ym::vec3f translation = {0, 0, 0};
-      printVec(translation);
-      printMatrix(ym::translation_mat4(translation));
-//      printMatrix( ym::rotation_mat4(rotation) );
-//      printMatrix( matrix);
       return ym::translation_mat4(translation) * ym::rotation_mat4(rotation) *
              matrix;
     }

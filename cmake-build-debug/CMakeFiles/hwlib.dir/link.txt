@@ -1,2 +1,2 @@
-/usr/bin/ar qc ../bin/libhwlib.a  CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o CMakeFiles/hwlib.dir/src/yocto_img.cpp.o CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o
-/usr/bin/ranlib ../bin/libhwlib.a
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc ../bin/libhwlib.a  CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o CMakeFiles/hwlib.dir/src/yocto_img.cpp.o CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib ../bin/libhwlib.a
