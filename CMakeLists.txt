@@ -32,7 +32,7 @@ add_library(hwlib STATIC
     src/yocto_math.h
     src/yocto_utils.h
     src/yocto_img.cpp
-    src/yocto_obj.cpp)
+    src/yocto_obj.cpp src/printData.h)
 
 add_executable(raytrace src/raytrace.cpp)
 

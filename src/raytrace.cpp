@@ -4,40 +4,11 @@
 #include "yocto_math.h"
 #include "yocto_obj.h"
 #include "yocto_utils.h"
+#include "printData.h"
+
 using namespace std;
 vector<yobj::shape*> lights= vector<yobj::shape*>{};
 float epsilon = 1e-3;
-
-void printFrame(const ym::frame<float,3>& M){
-  printf("%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g;\n\n",
-         M.x.x,M.y.x,M.z.x,
-          M.x.y,M.y.y,M.z.y,
-         M.x.z,M.y.z,M.z.z,
-         M.o.z,M.o.z,M.o.z);
-}
-
-void printFrame(const ym::vec4f& M){
-  printf("%.6g,%.6g,%.6g,%.6g;\n\n",
-         M.x,M.y,M.z,M.w);
-}
-
-void printFrame(const ym::vec3f& M){
-  printf("%.6g,%.6g,%.6g;\n\n",
-         M.x,M.y,M.z);
-}
-
-void printFrame(const ym::quat4f& M){
-  printf("%.6g,%.6g,%.6g,%.6g;\n\n",
-         M.x,M.y,M.z,M.w);
-}
-
-void printFrame(const ym::mat4f& M){
-  printf("%.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n\n",
-         M.x.x,M.y.x,M.z.x,M.w.x,
-         M.x.y,M.y.y,M.z.y,M.w.y,
-         M.x.z,M.y.z,M.z.z,M.w.z,
-         M.x.w,M.y.w,M.z.w,M.w.w);
-}
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
 
@@ -76,7 +47,7 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
       continue;
 
 //    auto new_frame = ym::inverse(ym::to_frame(scn->cameras[0]->matrix))*ym::to_frame(ist->matrix);
-    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(ist->matrix),
+    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
 //    ybvh::set_instance_frame(bvh_scn,iid,new_frame);
   }
@@ -88,15 +59,14 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
 ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
 //printFrame(ym::to_frame(cam->matrix));
-  auto camera_pos = (ym::to_frame(cam->matrix));
-  //auto camera_pos = ym::to_frame(ym::identity_mat4f);
+  auto camera_pos = ym::to_frame(cam->xform());
+  //auto camera_pos = ym::inverse(ym::to_frame(cam->xform()));
 
   auto q = camera_pos.o
    + ((u - .5f)*w*camera_pos.x)
    + ((v - .5f)*h*camera_pos.y)
    - (camera_pos.z);
 
-  //camera_pos = ym::inverse(ym::to_frame(cam->matrix));
 
   auto d = q-camera_pos.o;
   ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d),epsilon);
@@ -214,18 +184,28 @@ int main(int argc, char** argv) {
 //  scn->cameras.clear();
 //  yobj::add_default_camera(scn);
 
-  // create bvh
-  yu::logging::log_info("creating bvh");
-  auto bvh = make_bvh(scn);
-  yu::logging::log_info("bvh created");
-
-  // raytrace
-  yu::logging::log_info("tracing scene");
-  auto hdr = (parallel)
-             ? raytrace_mt(scn, bvh, {amb, amb, amb}, resolution, samples)
-             : raytrace(scn, bvh, {amb, amb, amb}, resolution, samples);
-  // tonemap and save
-  yu::logging::log_info("saving image " + imageout);
-  auto ldr = ym::tonemap_image(hdr, ym::tonemap_type::srgb, 0, 2.2);
-  yimg::save_image4b(imageout, ldr);
+  auto cam = scn->cameras[0];
+//  printMatrix((cam->matrix));
+//  printMatrix(ym::translation_mat4(cam->translation) * ym::rotation_mat4(cam->rotation) *
+//                 cam->matrix);
+//  printMatrix(cam->xform());
+  cerr<<"fuori"<<endl;
+  ym::vec3f translation = {0, 0, 0};
+  printVec(translation);
+  printMatrix(ym::translation_mat4(translation));
+cam->xform();
+//  // create bvh
+//  yu::logging::log_info("creating bvh");
+//  auto bvh = make_bvh(scn);
+//  yu::logging::log_info("bvh created");
+//
+//  // raytrace
+//  yu::logging::log_info("tracing scene");
+//  auto hdr = (parallel)
+//             ? raytrace_mt(scn, bvh, {amb, amb, amb}, resolution, samples)
+//             : raytrace(scn, bvh, {amb, amb, amb}, resolution, samples);
+//  // tonemap and save
+//  yu::logging::log_info("saving image " + imageout);
+//  auto ldr = ym::tonemap_image(hdr, ym::tonemap_type::srgb, 0, 2.2);
+//  yimg::save_image4b(imageout, ldr);
 }

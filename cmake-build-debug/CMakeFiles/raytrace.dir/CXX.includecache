@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/francesco/Documents/computer_graphics_hw1/src/printData.h
+yocto_math.h
+/home/francesco/Documents/computer_graphics_hw1/src/yocto_math.h
+
 /home/francesco/Documents/computer_graphics_hw1/src/raytrace.cpp
 thread
 -
@@ -19,6 +23,8 @@ yocto_obj.h
 /home/francesco/Documents/computer_graphics_hw1/src/yocto_obj.h
 yocto_utils.h
 /home/francesco/Documents/computer_graphics_hw1/src/yocto_utils.h
+printData.h
+/home/francesco/Documents/computer_graphics_hw1/src/printData.h
 
 /home/francesco/Documents/computer_graphics_hw1/src/yocto_bvh.h
 array
