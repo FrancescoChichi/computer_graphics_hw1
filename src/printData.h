@@ -11,28 +11,9 @@ void printFrame(const ym::frame<float,3>& M){
          M.x.z,M.y.z,M.z.z,
          M.o.z,M.o.z,M.o.z);
 }
-
-void printVec(const ym::vec4f& M){
-  printf("%.6g,%.6g,%.6g,%.6g;\n\n",
-         M.x,M.y,M.z,M.w);
-}
-
-void printVec(const ym::vec3f& M){
-  printf("%.6g,%.6g,%.6g;\n\n",
-         M.x,M.y,M.z);
-}
-
 void printQuat(const ym::quat4f& M){
   printf("%.6g,%.6g,%.6g,%.6g;\n\n",
          M.x,M.y,M.z,M.w);
-}
-
-void printMatrix(const ym::mat4f& M){
-  printf("%.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n %.6g,%.6g,%.6g,%.6g;\n\n",
-         M.x.x,M.y.x,M.z.x,M.w.x,
-         M.x.y,M.y.y,M.z.y,M.w.y,
-         M.x.z,M.y.z,M.z.z,M.w.z,
-         M.x.w,M.y.w,M.z.w,M.w.w);
 }
 
 template <typename T, int N, int M>

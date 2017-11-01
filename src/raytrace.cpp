@@ -201,8 +201,8 @@ int main(int argc, char** argv) {
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
 //  scn->cameras.clear();
-//  yobj::add_default_camera(scn);
-  
+  yobj::add_default_camera(scn);
+
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
