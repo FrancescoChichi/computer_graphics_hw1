@@ -75,7 +75,7 @@ void ray_triangle_intersection(ym::vec3f v0,ym::vec3f v1,ym::vec3f v2, ym::ray3f
 }
 
 ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
-//printFrame(ym::to_frame(cam->matrix));
+
   auto camera_pos = ym::to_frame(cam->xform());
   //auto camera_pos = ym::inverse(ym::to_frame(cam->xform()));
 
@@ -104,13 +104,10 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
     auto ist = scn->instances[intersection.iid];
     auto mat = ist->msh->shapes[0]->mat;
-    auto shp = ist->msh->shapes[0];
     auto msh = ist->msh;
 
     auto n =  normal(msh,intersection.eid,intersection.euv.xyz());
     auto p = position(msh,intersection.eid,intersection.euv.xyz());
-//    auto n =  shp->norm[intersection.eid];
-   // auto p = shp->pos[intersection.eid];
 
     for(auto light:lights){
 
@@ -119,8 +116,9 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
       ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
       auto shadow = ybvh::intersect_scene(bvh, sr, false);
-      if(shadow.sid==intersection.sid&&shadow.eid==intersection.eid)
+      if(shadow) {
         continue;
+      }
       else {
         auto In = light->mat->ke / (r * r);
         auto v = normalize(ray.o-p);
@@ -132,8 +130,6 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
       }
     }
   }
-  else
-    c={255,255,0,1};
 
   return {c.x, c.y, c.z, 0};
 }
@@ -206,8 +202,7 @@ int main(int argc, char** argv) {
   yobj::add_instances(scn);
 //  scn->cameras.clear();
 //  yobj::add_default_camera(scn);
-
-
+  
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
