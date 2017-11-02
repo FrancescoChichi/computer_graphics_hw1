@@ -43,10 +43,10 @@ RM = /Applications/CLion.app/Contents/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/rc/Desktop/computer_graphics_hw1
+CMAKE_SOURCE_DIR = /Users/s1r/Desktop/computer_graphics_hw1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/hwlib.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/hwlib.dir/flags.make
 
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o: CMakeFiles/hwlib.dir/flags.make
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o: ../src/yocto_bvh.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o -c /Users/rc/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o -c /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp
 
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/rc/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp > CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp > CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.i
 
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/rc/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp -o CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp -o CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.s
 
 CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o.provides.build: CMakeFiles/hwlib.dir/sr
 
 CMakeFiles/hwlib.dir/src/yocto_img.cpp.o: CMakeFiles/hwlib.dir/flags.make
 CMakeFiles/hwlib.dir/src/yocto_img.cpp.o: ../src/yocto_img.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/hwlib.dir/src/yocto_img.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hwlib.dir/src/yocto_img.cpp.o -c /Users/rc/Desktop/computer_graphics_hw1/src/yocto_img.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/hwlib.dir/src/yocto_img.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hwlib.dir/src/yocto_img.cpp.o -c /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_img.cpp
 
 CMakeFiles/hwlib.dir/src/yocto_img.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hwlib.dir/src/yocto_img.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/rc/Desktop/computer_graphics_hw1/src/yocto_img.cpp > CMakeFiles/hwlib.dir/src/yocto_img.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_img.cpp > CMakeFiles/hwlib.dir/src/yocto_img.cpp.i
 
 CMakeFiles/hwlib.dir/src/yocto_img.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hwlib.dir/src/yocto_img.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/rc/Desktop/computer_graphics_hw1/src/yocto_img.cpp -o CMakeFiles/hwlib.dir/src/yocto_img.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_img.cpp -o CMakeFiles/hwlib.dir/src/yocto_img.cpp.s
 
 CMakeFiles/hwlib.dir/src/yocto_img.cpp.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/hwlib.dir/src/yocto_img.cpp.o.provides.build: CMakeFiles/hwlib.dir/sr
 
 CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o: CMakeFiles/hwlib.dir/flags.make
 CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o: ../src/yocto_obj.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o -c /Users/rc/Desktop/computer_graphics_hw1/src/yocto_obj.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o -c /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_obj.cpp
 
 CMakeFiles/hwlib.dir/src/yocto_obj.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/hwlib.dir/src/yocto_obj.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/rc/Desktop/computer_graphics_hw1/src/yocto_obj.cpp > CMakeFiles/hwlib.dir/src/yocto_obj.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_obj.cpp > CMakeFiles/hwlib.dir/src/yocto_obj.cpp.i
 
 CMakeFiles/hwlib.dir/src/yocto_obj.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/hwlib.dir/src/yocto_obj.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/rc/Desktop/computer_graphics_hw1/src/yocto_obj.cpp -o CMakeFiles/hwlib.dir/src/yocto_obj.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/s1r/Desktop/computer_graphics_hw1/src/yocto_obj.cpp -o CMakeFiles/hwlib.dir/src/yocto_obj.cpp.s
 
 CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o.requires:
 
@@ -143,7 +143,7 @@ hwlib_EXTERNAL_OBJECTS =
 ../bin/libhwlib.a: CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o
 ../bin/libhwlib.a: CMakeFiles/hwlib.dir/build.make
 ../bin/libhwlib.a: CMakeFiles/hwlib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library ../bin/libhwlib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library ../bin/libhwlib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/hwlib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hwlib.dir/link.txt --verbose=$(VERBOSE)
 
@@ -163,6 +163,6 @@ CMakeFiles/hwlib.dir/clean:
 .PHONY : CMakeFiles/hwlib.dir/clean
 
 CMakeFiles/hwlib.dir/depend:
-	cd /Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/rc/Desktop/computer_graphics_hw1 /Users/rc/Desktop/computer_graphics_hw1 /Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug /Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug /Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/s1r/Desktop/computer_graphics_hw1 /Users/s1r/Desktop/computer_graphics_hw1 /Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug /Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug /Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/hwlib.dir/depend
 

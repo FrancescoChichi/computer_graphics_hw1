@@ -1,4 +1,4 @@
-/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/raytrace.dir
-/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir
+/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/raytrace.dir
+/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir

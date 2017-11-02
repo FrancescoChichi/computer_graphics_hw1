@@ -4,9 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/rc/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp" "/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o"
-  "/Users/rc/Desktop/computer_graphics_hw1/src/yocto_img.cpp" "/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_img.cpp.o"
-  "/Users/rc/Desktop/computer_graphics_hw1/src/yocto_obj.cpp" "/Users/rc/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o"
+  "/Users/s1r/Desktop/computer_graphics_hw1/src/yocto_bvh.cpp" "/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_bvh.cpp.o"
+  "/Users/s1r/Desktop/computer_graphics_hw1/src/yocto_img.cpp" "/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_img.cpp.o"
+  "/Users/s1r/Desktop/computer_graphics_hw1/src/yocto_obj.cpp" "/Users/s1r/Desktop/computer_graphics_hw1/cmake-build-debug/CMakeFiles/hwlib.dir/src/yocto_obj.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 

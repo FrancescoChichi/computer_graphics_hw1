@@ -15,10 +15,19 @@ ym::vec3f normal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
   return ym::normalize(euv.x * msh->shapes[0]->norm[t.x] +
                    euv.y * msh->shapes[0]->norm[t.y] + euv.z * msh->shapes[0]->norm[t.z]);
 }
-ym::vec3f position(const yobj::mesh* msh, int eid, ym::vec3f euv) {
+ym::vec3f lineNormal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
+  auto t = msh->shapes[0]->lines[eid];
+  return ym::normalize(euv.x * msh->shapes[0]->norm[t.x] +
+                       euv.y * msh->shapes[0]->norm[t.y]);
+}
+ym::vec3f trianglePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
   auto t = msh->shapes[0]->triangles[eid];
   return (euv.x * msh->shapes[0]->pos[t.x] + euv.y * msh->shapes[0]->pos[t.y] +
          euv.z * msh->shapes[0]->pos[t.z]);
+}
+ym::vec3f linePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
+  auto t = msh->shapes[0]->lines[eid];
+  return (euv.x * msh->shapes[0]->pos[t.x] + euv.y * msh->shapes[0]->pos[t.y]);
 }
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
@@ -58,7 +67,8 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
       continue;
 
 //    auto new_frame = ym::inverse(ym::to_frame(scn->cameras[0]->matrix))*ym::to_frame(ist->matrix);
-    auto iid = ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
+    //auto iid =
+    ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
 //    ybvh::set_instance_frame(bvh_scn,iid,new_frame);
   }
@@ -101,32 +111,74 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
   ym::vec4f c = ym::vec4f(0,0,0,1);
 
   if(intersection){
+      auto ist = scn->instances[intersection.iid];
+      auto mat = ist->msh->shapes[0]->mat;
+      auto msh = ist->msh;
+    if(!scn->instances[intersection.iid]->msh->shapes[0]->triangles.empty()){
 
-    auto ist = scn->instances[intersection.iid];
-    auto mat = ist->msh->shapes[0]->mat;
-    auto msh = ist->msh;
+      auto n =  normal(msh,intersection.eid,intersection.euv.xyz());
+      auto p = trianglePosition(msh,intersection.eid,intersection.euv.xyz());
 
-    auto n =  normal(msh,intersection.eid,intersection.euv.xyz());
-    auto p = position(msh,intersection.eid,intersection.euv.xyz());
+      for(auto light:lights){
 
-    for(auto light:lights){
+        auto l = normalize(light->pos[0]-p);
+        auto r = length(light->pos[0]-p);
 
-      auto l = normalize(light->pos[0]-p);
-      auto r = length(light->pos[0]-p);
+        ym::ray3f sr = ym::ray3f(p,l,epsilon,r);
+        auto shadow = ybvh::intersect_scene(bvh, sr, false);
+        if(shadow) {
+          continue;
+        }
+        else {
+          auto In = light->mat->ke / (r * r);
+          auto v = normalize(ray.o-p);
+          auto h = ym::normalize((v+l));
+          auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
-      ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
-      auto shadow = ybvh::intersect_scene(bvh, sr, false);
-      if(shadow) {
-        continue;
+          c.xyz() += mat->kd * In * max(.0f, dot(n, l))
+                   + mat->ks * In * pow(max(.0f,dot(n,h)),ns);
+        }
       }
-      else {
-        auto In = light->mat->ke / (r * r);
-        auto v = normalize(ray.o-p);
-        auto h = ym::normalize((v+l));
-        auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
-        c.xyz() += mat->kd * In * max(.0f, fabs(dot(n, l)))
-                 + mat->ks * In * pow(max(.0f,fabs(dot(n,h))),ns);
+      if(mat->kr.x!=0 && mat->kr.y!=0 && mat->kr.z!=0)
+      {
+        ym::vec3f n =  normal(msh,intersection.eid,intersection.euv.xyz());
+        auto ist = scn->instances[intersection.iid];
+        auto mat = ist->msh->shapes[0]->mat;
+
+        ym::ray3f reflectionRay = ym::ray3f();
+        reflectionRay.o=intersection.euv.xyz();
+        float a = dot(n,-ray.d);
+        a *= 2;
+        n.x*=2;
+        n.y*=2;
+        n.z*=2;
+        reflectionRay.d= n-(-ray.d);
+        //avoid hitting visible point
+        reflectionRay.tmin=0.0005f+0.0002f;
+        // accumulate the reflected light (recursive call) scaled by the material reflection
+        c.xyz() += mat->kr*compute_color(bvh,scn, reflectionRay).xyz();
+      }
+    }
+    else{
+      auto n =  lineNormal(msh,intersection.eid,intersection.euv.xyz());
+      auto p = linePosition(msh,intersection.eid,intersection.euv.xyz());
+
+      for(auto light:lights){
+
+        auto l = normalize(light->pos[0]-p);
+        auto r = length(light->pos[0]-p);
+
+        ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
+        auto shadow = ybvh::intersect_scene(bvh, sr, false);
+        if(shadow) {
+          continue;
+        }
+        else {
+          auto In = light->mat->ke / (r * r);
+
+        c.xyz() += mat->kd * In * max(.0f, dot(n, l));
+        }
       }
     }
   }
@@ -201,8 +253,8 @@ int main(int argc, char** argv) {
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
 //  scn->cameras.clear();
-  yobj::add_default_camera(scn);
-
+//  yobj::add_default_camera(scn);
+  
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);

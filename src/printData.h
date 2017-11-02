@@ -11,10 +11,6 @@ void printFrame(const ym::frame<float,3>& M){
          M.x.z,M.y.z,M.z.z,
          M.o.z,M.o.z,M.o.z);
 }
-void printQuat(const ym::quat4f& M){
-  printf("%.6g,%.6g,%.6g,%.6g;\n\n",
-         M.x,M.y,M.z,M.w);
-}
 
 template <typename T, int N, int M>
 void printMatrix(ym::mat<T, N, M> m){
