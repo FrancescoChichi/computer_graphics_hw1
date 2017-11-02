@@ -114,6 +114,8 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
       auto ist = scn->instances[intersection.iid];
       auto mat = ist->msh->shapes[0]->mat;
       auto msh = ist->msh;
+      auto kd = mat->kd;
+      auto ks = mat->ks;
     if(!scn->instances[intersection.iid]->msh->shapes[0]->triangles.empty()){
 
       auto n =  normal(msh,intersection.eid,intersection.euv.xyz());
@@ -135,8 +137,8 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
           auto h = ym::normalize((v+l));
           auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
-          c.xyz() += mat->kd * In * max(.0f, dot(n, l))
-                   + mat->ks * In * pow(max(.0f,dot(n,h)),ns);
+          c.xyz() += kd * In * max(.0f, dot(n, l))
+                   + ks * In * pow(max(.0f,dot(n,h)),ns);
         }
       }
 
@@ -148,17 +150,18 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
 
         ym::ray3f reflectionRay = ym::ray3f();
         reflectionRay.o=intersection.euv.xyz();
-        float a = dot(n,-ray.d);
+        float a = ym::dot(n,-ray.d);
         a *= 2;
-        n.x*=2;
-        n.y*=2;
-        n.z*=2;
-        reflectionRay.d= n-(-ray.d);
+        n.x*=a;
+        n.y*=a;
+        n.z*=a;//2(n*v)
+        reflectionRay.d= n+ray.d;
         //avoid hitting visible point
         reflectionRay.tmin=0.0005f+0.0002f;
         // accumulate the reflected light (recursive call) scaled by the material reflection
         c.xyz() += mat->kr*compute_color(bvh,scn, reflectionRay).xyz();
       }
+
     }
     else{
       auto n =  lineNormal(msh,intersection.eid,intersection.euv.xyz());
@@ -177,7 +180,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
         else {
           auto In = light->mat->ke / (r * r);
 
-        c.xyz() += mat->kd * In * max(.0f, dot(n, l));
+        c.xyz() += kd * In * max(.0f, dot(n, l));
         }
       }
     }
