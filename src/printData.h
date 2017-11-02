@@ -22,6 +22,7 @@ void printMatrix(ym::mat<T, N, M> m){
   }
   printf("\n");
 }
+
 template <typename T, int N>
 void printVector(ym::vec<T, N> v){
   for(int i=0; i<N; i++) {

@@ -5,12 +5,13 @@
 #include "yocto_obj.h"
 #include "yocto_utils.h"
 #include "printData.h"
+#include "math.h"
 
 using namespace std;
 vector<yobj::shape*> lights= vector<yobj::shape*>{};
-float epsilon = 1e-3;
+float epsilon = 1e-6;
 
-ym::vec3f normal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
+ym::vec3f triangleNormal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
   auto t = msh->shapes[0]->triangles[eid];
   return ym::normalize(euv.x * msh->shapes[0]->norm[t.x] +
                    euv.y * msh->shapes[0]->norm[t.y] + euv.z * msh->shapes[0]->norm[t.z]);
@@ -21,13 +22,72 @@ ym::vec3f lineNormal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
                        euv.y * msh->shapes[0]->norm[t.y]);
 }
 ym::vec3f trianglePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
-  auto t = msh->shapes[0]->triangles[eid];
-  return (euv.x * msh->shapes[0]->pos[t.x] + euv.y * msh->shapes[0]->pos[t.y] +
-         euv.z * msh->shapes[0]->pos[t.z]);
+  auto l = msh->shapes[0]->triangles[eid];
+  return (euv.x * msh->shapes[0]->pos[l.x] + euv.y * msh->shapes[0]->pos[l.y] +
+         euv.z * msh->shapes[0]->pos[l.z]);
 }
 ym::vec3f linePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
-  auto t = msh->shapes[0]->lines[eid];
-  return (euv.x * msh->shapes[0]->pos[t.x] + euv.y * msh->shapes[0]->pos[t.y]);
+  auto l = msh->shapes[0]->lines[eid];
+  return (euv.x * msh->shapes[0]->pos[l.x] + euv.y * msh->shapes[0]->pos[l.y]);
+}
+
+ym::image4f flipImage4(ym::image4f img){
+  auto W = img.width();
+  auto H = img.height();
+  ym::image4f m = ym::image4f(W,H, {0,0,0,1});
+  for (int i = 0; i <W; ++i) {
+    for (int j = 0; j <H; ++j) {
+      m[{i,(H-1-j)}]=img[{i,j}];
+    }
+  }
+  return m;
+};
+/*
+ym::vec3b textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::texture* tex ){
+  auto tr = msh->shapes[0]->triangles[eid];
+  auto u = euv.x*msh->shapes[0]->pos[tr.x].x + euv.y*msh->shapes[0]->pos[tr.y].x + euv.z*msh->shapes[0]->pos[tr.z].x;
+  auto v = euv.x*msh->shapes[0]->pos[tr.x].y + euv.y*msh->shapes[0]->pos[tr.y].y + euv.z*msh->shapes[0]->pos[tr.z].y;
+
+  float s = (fmod(u,1.0f))*tex->width();
+  float t = (fmod(v,1.0f))*tex->height();
+
+  int i = (int)round(s);
+  int j = (int)round(t);
+
+  auto i1 = (i + 1)%tex->width();
+  auto j1 = (j + 1)%tex->height();
+
+  float wi = s - i;
+  float wj = t - j;
+
+
+
+  return ym::vec3b((1-wi)*(1-wj))*tex->ldr[{i,j}];
+         +ym::vec4b(wi*(1-wj))*tex->ldr[{i1,j}]
+         +ym::vec4b(wj*(1-wi))*tex->ldr[{i,j1}]
+         +ym::vec4b(wi*wj)*tex->ldr[{i1,j1}];
+}*/
+ym::vec4f textureHDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::texture* tex ){
+  auto tr = msh->shapes[0]->triangles[eid];
+  auto u = euv.x*msh->shapes[0]->pos[tr.x].x + euv.y*msh->shapes[0]->pos[tr.y].x + euv.z*msh->shapes[0]->pos[tr.z].x;
+  auto v = euv.x*msh->shapes[0]->pos[tr.x].y + euv.y*msh->shapes[0]->pos[tr.y].y + euv.z*msh->shapes[0]->pos[tr.z].y;
+
+  float s = (fmod(u,1.0f))*tex->width();
+  float t = (fmod(v,1.0f))*tex->height();
+
+  int i = (int)round(s);
+  int j = (int)round(t);
+
+  auto i1 = (i + 1)%tex->width();
+  auto j1 = (j + 1)%tex->height();
+
+  float wi = s - i;
+  float wj = t - j;
+
+  return ym::vec4f((1-wi)*(1-wj))*tex->hdr[{i,j}]
+         +ym::vec4f(wi*(1-wj))*tex->hdr[{i1,j}]
+         +ym::vec4f(wj*(1-wi))*tex->hdr[{i,j1}]
+         +ym::vec4f(wi*wj)*tex->hdr[{i1,j1}];
 }
 
 ybvh::scene* make_bvh(yobj::scene* scn) {
@@ -66,11 +126,11 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     if(!shp->points.empty())
       continue;
 
-//    auto new_frame = ym::inverse(ym::to_frame(scn->cameras[0]->matrix))*ym::to_frame(ist->matrix);
+    //auto new_frame = ym::transform_frame(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ym::to_frame(ist->xform()));
     //auto iid =
     ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
-//    ybvh::set_instance_frame(bvh_scn,iid,new_frame);
+    //ybvh::set_instance_frame(bvh_scn,iid,new_frame);
   }
 
   ybvh::build_scene_bvh(bvh_scn);
@@ -103,6 +163,8 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
 
 ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
 
+  //ym::transform_ray(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ray);
+  //ray=ym::transform_ray(ym::to_frame(scn->cameras[0]->xform()),ray);
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
 
 
@@ -116,11 +178,24 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
       auto msh = ist->msh;
       auto kd = mat->kd;
       auto ks = mat->ks;
-    if(!scn->instances[intersection.iid]->msh->shapes[0]->triangles.empty()){
+    if(!scn->instances[intersection.iid]->msh->shapes[0]->triangles.empty()){//triangles
 
-      auto n =  normal(msh,intersection.eid,intersection.euv.xyz());
+      auto n =  triangleNormal(msh,intersection.eid,intersection.euv.xyz());
       auto p = trianglePosition(msh,intersection.eid,intersection.euv.xyz());
-
+      /*if(mat->kd_txt!= nullptr)
+      {
+        if(mat->kd_txt->ldr)
+          kd*=textureLDR(msh,intersection.eid,intersection.euv.xyz(), mat->kd_txt);
+        else
+          kd*=textureHDR(msh,intersection.eid,intersection.euv.xyz(), mat->kd_txt);
+      }
+      if(mat->ks_txt!= nullptr)
+      {
+        if(mat->ks_txt->ldr)
+          ks*=textureLDR(msh,intersection.eid,intersection.euv.xyz(), mat->ks_txt);
+        else
+          ks*=textureHDR(msh,intersection.eid,intersection.euv.xyz(), mat->ks_txt);
+      }*/
       for(auto light:lights){
 
         auto l = normalize(light->pos[0]-p);
@@ -142,9 +217,9 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
         }
       }
 
-      if(mat->kr.x!=0 && mat->kr.y!=0 && mat->kr.z!=0)
+      if(mat->kr.x!=0 && mat->kr.y!=0 && mat->kr.z!=0)//reflection
       {
-        ym::vec3f n =  normal(msh,intersection.eid,intersection.euv.xyz());
+        ym::vec3f n =  triangleNormal(msh,intersection.eid,intersection.euv.xyz());
         auto ist = scn->instances[intersection.iid];
         auto mat = ist->msh->shapes[0]->mat;
 
@@ -162,8 +237,10 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
         c.xyz() += mat->kr*compute_color(bvh,scn, reflectionRay).xyz();
       }
 
+
+
     }
-    else{
+    else{//lines
       auto n =  lineNormal(msh,intersection.eid,intersection.euv.xyz());
       auto p = linePosition(msh,intersection.eid,intersection.euv.xyz());
 
@@ -185,12 +262,12 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
       }
     }
   }
-
+  //c+={0.5, 0.2, 0.2,1};
   return {c.x, c.y, c.z, 0};
 }
 
 ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
-                     const ym::vec3f& amb, int resolution, int samples) {
+                     const ym::vec4f& amb, int resolution, int samples) {
   auto cam = scn->cameras[0];
 
   float h = 2*tan(cam->yfov/2);
@@ -203,27 +280,27 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
   ym::image4f img = ym::image4f(width,height, {0,0,0,1});
 
   /// antialiased with n^2 samplers per pixel
-  for(int j = 0; j<height; j++) {
-    for(int i = 0; i<width; i++) {
-      for(int sj=0; sj<samples;sj++) {
-        for (int si = 0; si < samples; si++) {
+  for(int j = 0; j<height; ++j) {
+    for(int i = 0; i<width; ++i) {
+      for(int sj=0; sj<samples;++sj) {
+        for (int si = 0; si < samples; ++si) {
           auto u = (i + (si+0.5f)/samples) / width;
           auto v = (j + (sj+0.5f)/samples) / height;
           auto ray = camera_ray(cam, u, v, w, h);
-          img[{i, j}] += compute_color(bvh,scn,ray);
+          img[{i, j}] += amb + compute_color(bvh,scn,ray);
         }
       }
       img[{i, j}] /= {norm,norm,norm,1};
     }
   }
 
-  return img;
+  return flipImage4(img);
 }
 
 
 
 ym::image4f raytrace_mt(const yobj::scene* scn, const ybvh::scene* bvh,
-                        const ym::vec3f& amb, int resolution, int samples) {
+                        const ym::vec4f& amb, int resolution, int samples) {
   // YOUR CODE GOES HERE ----------------------
   return {};
 }
@@ -266,8 +343,8 @@ int main(int argc, char** argv) {
   // raytrace
   yu::logging::log_info("tracing scene");
   auto hdr = (parallel)
-             ? raytrace_mt(scn, bvh, {amb, amb, amb}, resolution, samples)
-             : raytrace(scn, bvh, {amb, amb, amb}, resolution, samples);
+             ? raytrace_mt(scn, bvh, {amb, amb, amb,1}, resolution, samples)
+             : raytrace(scn, bvh, {amb, amb, amb,1}, resolution, samples);
   // tonemap and save
   yu::logging::log_info("saving image " + imageout);
   auto ldr = ym::tonemap_image(hdr, ym::tonemap_type::srgb, 0, 2.2);
