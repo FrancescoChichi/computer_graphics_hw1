@@ -159,12 +159,12 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
   //ym::transform_ray(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ray);
   //ray=ym::transform_ray(ym::to_frame(scn->cameras[0]->xform()),ray);
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
-  for(auto ist:scn->instances){
+ /* for(auto ist:scn->instances){
     ray=ym::transform_ray(ym::to_frame(ist->xform()),ray);
     intersection = ybvh::intersect_scene(bvh, ray, false);
     if(intersection)
       break;
-  }
+  }*/
 
 
 //  ym::ray3f r = ym::ray3f(ym::transform_ray(ym::to_frame(scn->instances[intersection.iid]->xform()),ray));
