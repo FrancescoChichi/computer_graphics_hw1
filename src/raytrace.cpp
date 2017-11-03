@@ -17,36 +17,38 @@ ym::vec3f triangleNormal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
                    euv.y * msh->shapes[0]->norm[t.y] + euv.z * msh->shapes[0]->norm[t.z]);
 }
 ym::vec3f lineNormal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
-  auto t = msh->shapes[0]->lines[eid];
-  return ym::normalize(euv.x * msh->shapes[0]->norm[t.x] +
-                       euv.y * msh->shapes[0]->norm[t.y]);
+  auto l = msh->shapes[0]->lines[eid];
+  return ym::normalize(euv.x * msh->shapes[0]->norm[l.x] +
+                       euv.y * msh->shapes[0]->norm[l.y]);
 }
 ym::vec3f trianglePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
-  auto l = msh->shapes[0]->triangles[eid];
-  return (euv.x * msh->shapes[0]->pos[l.x] + euv.y * msh->shapes[0]->pos[l.y] +
-         euv.z * msh->shapes[0]->pos[l.z]);
+  auto t = msh->shapes[0]->triangles[eid];
+  return (euv.x * msh->shapes[0]->pos[t.x] + euv.y * msh->shapes[0]->pos[t.y] +
+         euv.z * msh->shapes[0]->pos[t.z]);
 }
 ym::vec3f linePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
   auto l = msh->shapes[0]->lines[eid];
   return (euv.x * msh->shapes[0]->pos[l.x] + euv.y * msh->shapes[0]->pos[l.y]);
 }
 
-ym::image4f flipImage4(ym::image4f img){
-  auto W = img.width();
-  auto H = img.height();
-  ym::image4f m = ym::image4f(W,H, {0,0,0,1});
-  for (int i = 0; i <W; ++i) {
-    for (int j = 0; j <H; ++j) {
-      m[{i,(H-1-j)}]=img[{i,j}];
-    }
-  }
-  return m;
-};
-
 ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::texture* tex ){
+  //cout<<msh->shapes[0]->texcoord.size()<<endl;
+  //auto uv = trianglePosition(msh, eid, euv);
+  //cout<<" i "<<msh->shapes[0]->texcoord[eid].x<<" j " <<msh->shapes[0]->texcoord[eid].y<<endl;
   auto tr = msh->shapes[0]->triangles[eid];
-  float u = euv.x*msh->shapes[0]->pos[tr.x].x + euv.y*msh->shapes[0]->pos[tr.y].x + euv.z*msh->shapes[0]->pos[tr.z].x;
-  float v = euv.x*msh->shapes[0]->pos[tr.x].y + euv.y*msh->shapes[0]->pos[tr.y].y + euv.z*msh->shapes[0]->pos[tr.z].y;
+
+  //auto uv =
+  //cout<<"tx "<<msh->shapes[0]->texcoord.size()<<" tr "<<msh->shapes[0]->triangles.size()<<endl;
+  float u1 = msh->shapes[0]->texcoord[tr.x].x;
+  float v1 = msh->shapes[0]->texcoord[tr.x].y;
+  float u2 = msh->shapes[0]->texcoord[tr.y].x;
+  float v2 = msh->shapes[0]->texcoord[tr.y].y;
+  float u3 = msh->shapes[0]->texcoord[tr.z].x;
+  float v3 = msh->shapes[0]->texcoord[tr.z].y;
+
+  float u = euv.x*u1 + euv.y*u2 + euv.z*u3;
+  float v = euv.x*v1 + euv.y*v2 + euv.z*v3;
+
 
   float s = (fmod(u,1.0f))*tex->width();
   float t = (fmod(v,1.0f))*tex->height();
@@ -60,6 +62,7 @@ ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::textur
   float wi = s - i;
   float wj = t - j;
 
+  //return ym::srgb_to_linear(tex->ldr[{i,j}]);
 
   return ym::vec4f((1-wi)*(1-wj))*ym::srgb_to_linear(tex->ldr[{i,j}])
          +ym::vec4f(wi*(1-wj))*ym::srgb_to_linear(tex->ldr[{i1,j}])
@@ -125,7 +128,6 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     if(!shp->points.empty())
       continue;
 
-    //printFrame(ym::to_frame(ist->xform()));
     //auto new_frame = ym::transform_frame(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ym::to_frame(ist->xform()));
     //auto iid =
     ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
@@ -154,18 +156,11 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
   return ray;
 }
 
-ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3f ray){
+ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj::scene* scn, ym::ray3f ray){
 
   //ym::transform_ray(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ray);
   //ray=ym::transform_ray(ym::to_frame(scn->cameras[0]->xform()),ray);
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
- /* for(auto ist:scn->instances){
-    ray=ym::transform_ray(ym::to_frame(ist->xform()),ray);
-    intersection = ybvh::intersect_scene(bvh, ray, false);
-    if(intersection)
-      break;
-  }*/
-
 
 //  ym::ray3f r = ym::ray3f(ym::transform_ray(ym::to_frame(scn->instances[intersection.iid]->xform()),ray));
 
@@ -183,7 +178,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
       auto p = trianglePosition(msh,intersection.eid,intersection.euv.xyz());
       if(mat->kd_txt!= nullptr)
       {
-        if(mat->kd_txt->ldr) {
+        if(mat->kd_txt->ldr){
           kd*=textureLDR(msh, intersection.eid, intersection.euv.xyz(), mat->kd_txt).xyz();
         }
         else
@@ -204,32 +199,17 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
         ym::ray3f sr = ym::ray3f(p,l,epsilon,r);
         auto shadow = ybvh::intersect_scene(bvh, sr, false);
         auto In = light->mat->ke / (r * r);
-        if(shadow) {
-          /*auto smsh = scn->instances[shadow.iid]->msh;
-          auto sn =  triangleNormal(smsh,shadow.eid,shadow.euv.xyz());
-          auto sp = trianglePosition(smsh,shadow.eid,shadow.euv.xyz());
-          auto sl = ym::normalize(light->pos[0]-sp);
-
-          if(shadow.iid==intersection.iid)
-            c.xyz() += kd * max(.0f, dot(sn, sl));
-          //c.xyz() += kd * max(.0f, dot(sn, normalize(light->pos[0]-sp)));*/
-          continue;
-        }
-        else {
+        if(!shadow) {
           auto v = ym::normalize(ray.o-p);
           auto h = ym::normalize((v+l));
           auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
-          //if(!shadow || shadow.iid==intersection.iid)
-          c.xyz() += kd * In * max(.0f, dot(n, l))
-                   + ks * In * pow(max(.0f,dot(n,h)),ns);
+          c.xyz() += kd * In * ym::max(.0f, ym::dot(n, l))
+                   + ks * In * ym::pow(ym::max(.0f,ym::dot(n,h)),ns);
         }
       }
+      c.xyz()+=kd*amb.xyz();
 
-      if(mat->opacity)
-        c.xyz() *= ym::vec3f(mat->opacity)
-                   + ym::vec3f(1-mat->opacity)
-                     * compute_color(bvh,scn,ym::ray3f(p,ray.d,epsilon)).xyz();
 
 
       if(mat->kr.x!=0 && mat->kr.y!=0 && mat->kr.z!=0)//reflection
@@ -239,7 +219,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
         auto mat = ist->msh->shapes[0]->mat;
 
         ym::ray3f reflectionRay = ym::ray3f();
-        reflectionRay.o=intersection.euv.xyz();
+        reflectionRay.o=p;
         float a = ym::dot(n,-ray.d);
         a *= 2;
         n.x*=a;
@@ -249,35 +229,41 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
         //avoid hitting visible point
         reflectionRay.tmin=epsilon;//0.0005f+0.0002f;
         // accumulate the reflected light (recursive call) scaled by the material reflection
-        c.xyz() += mat->kr*compute_color(bvh,scn, reflectionRay).xyz();
+        c.xyz() += mat->kr*compute_color(bvh,amb,scn, reflectionRay).xyz();
       }
 
 
+      if((mat->opacity>=0) && (mat->opacity<1)){
+        c.xyz() *= ym::vec3f(mat->opacity);
+        c.xyz() += ym::vec3f(1-mat->opacity)* compute_color(bvh,amb,scn,ym::ray3f(p,ray.d,epsilon)).xyz();
+
+      }
 
     }
     else{//lines
-      auto n =  lineNormal(msh,intersection.eid,intersection.euv.xyz());
+      auto n = lineNormal(msh,intersection.eid,intersection.euv.xyz());
       auto p = linePosition(msh,intersection.eid,intersection.euv.xyz());
+      auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
       for(auto light:lights){
 
         auto l = normalize(light->pos[0]-p);
         auto r = length(light->pos[0]-p);
 
+        auto v = ym::normalize(ray.o-p);
+        auto h = ym::normalize((v+l));
+
         ym::ray3f sr = ym::ray3f{p,l,epsilon,r};
         auto shadow = ybvh::intersect_scene(bvh, sr, false);
-        if(shadow) {
-          continue;
-        }
-        else {
-          auto In = light->mat->ke / (r * r);
 
-        c.xyz() += kd * In * max(.0f, dot(n, l));
+        if(!shadow) {
+          auto In = light->mat->ke / (r * r);
+          c.xyz() += kd * In * ym::sqrt(1-ym::abs(ym::dot(n,l)))
+                  + ks * In * ym::pow(sqrt(1-ym::abs(ym::dot(n,h))),ns);
         }
       }
     }
   }
-  //c+={0.5, 0.2, 0.2,1};
   return {c.x, c.y, c.z, 0};
 }
 
@@ -302,15 +288,15 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
           auto u = (i + (si+0.5f)/samples) / width;
           auto v = (j + (sj+0.5f)/samples) / height;
           auto ray = camera_ray(cam, u, v, w, h);
-          img[{i, j}] +=  compute_color(bvh,scn,ray);
+          img[{i, (height-1-j)}] +=  compute_color(bvh,amb,scn,ray);
         }
       }
-      img[{i,j}]+=amb ;
-      img[{i, j}] /= {norm,norm,norm,1};
+      //img[{i,(height-1-j)}]+=amb ;
+      img[{i, (height-1-j)}] /= {norm,norm,norm,1};
     }
   }
 
-  return flipImage4(img);
+  return img;
 }
 
 
@@ -348,10 +334,15 @@ int main(int argc, char** argv) {
   yobj::add_normals(scn);
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
-//  scn->cameras.clear();
+  //yobj::add_texture_data(scn);
+  // scn->cameras.clear();
 //  yobj::add_default_camera(scn);
 
+  /*for(auto ist:scn->instances) {
+    cerr << ist->msh->shapes[0]->mat->kd_txt->path << endl;
+  }*/
   // create bvh
+
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
   yu::logging::log_info("bvh created");
