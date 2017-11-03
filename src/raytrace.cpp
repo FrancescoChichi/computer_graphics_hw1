@@ -125,6 +125,7 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     if(!shp->points.empty())
       continue;
 
+    //printFrame(ym::to_frame(ist->xform()));
     //auto new_frame = ym::transform_frame(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ym::to_frame(ist->xform()));
     //auto iid =
     ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
@@ -158,6 +159,12 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
   //ym::transform_ray(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ray);
   //ray=ym::transform_ray(ym::to_frame(scn->cameras[0]->xform()),ray);
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
+  for(auto ist:scn->instances){
+    ray=ym::transform_ray(ym::to_frame(ist->xform()),ray);
+    intersection = ybvh::intersect_scene(bvh, ray, false);
+    if(intersection)
+      break;
+  }
 
 
 //  ym::ray3f r = ym::ray3f(ym::transform_ray(ym::to_frame(scn->instances[intersection.iid]->xform()),ray));
@@ -343,7 +350,7 @@ int main(int argc, char** argv) {
   yobj::add_instances(scn);
 //  scn->cameras.clear();
 //  yobj::add_default_camera(scn);
-  
+
   // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
