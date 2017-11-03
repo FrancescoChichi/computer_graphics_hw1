@@ -9,7 +9,7 @@
 
 using namespace std;
 vector<yobj::shape*> lights= vector<yobj::shape*>{};
-float epsilon = 1e-6;
+float epsilon = 1e-4;
 
 ym::vec3f triangleNormal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
   auto t = msh->shapes[0]->triangles[eid];
@@ -177,7 +177,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
       if(mat->kd_txt!= nullptr)
       {
         if(mat->kd_txt->ldr) {
-          kd *= textureLDR(msh, intersection.eid, intersection.euv.xyz(), mat->kd_txt).xyz();
+          kd*=textureLDR(msh, intersection.eid, intersection.euv.xyz(), mat->kd_txt).xyz();
         }
         else
           kd*=textureHDR(msh,intersection.eid,intersection.euv.xyz(), mat->kd_txt).xyz();
@@ -191,25 +191,39 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
       }
       for(auto light:lights){
 
-        auto l = normalize(light->pos[0]-p);
-        auto r = length(light->pos[0]-p);
+        auto l = ym::normalize(light->pos[0]-p);
+        auto r = ym::length(light->pos[0]-p);
 
         ym::ray3f sr = ym::ray3f(p,l,epsilon,r);
         auto shadow = ybvh::intersect_scene(bvh, sr, false);
+        auto In = light->mat->ke / (r * r);
         if(shadow) {
-          //c.xyz() += kd *  max(.0f, dot(n, normalize(sr.o-p)));
+          /*auto smsh = scn->instances[shadow.iid]->msh;
+          auto sn =  triangleNormal(smsh,shadow.eid,shadow.euv.xyz());
+          auto sp = trianglePosition(smsh,shadow.eid,shadow.euv.xyz());
+          auto sl = ym::normalize(light->pos[0]-sp);
+
+          if(shadow.iid==intersection.iid)
+            c.xyz() += kd * max(.0f, dot(sn, sl));
+          //c.xyz() += kd * max(.0f, dot(sn, normalize(light->pos[0]-sp)));*/
           continue;
         }
         else {
-          auto In = light->mat->ke / (r * r);
-          auto v = normalize(ray.o-p);
+          auto v = ym::normalize(ray.o-p);
           auto h = ym::normalize((v+l));
           auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
+          //if(!shadow || shadow.iid==intersection.iid)
           c.xyz() += kd * In * max(.0f, dot(n, l))
                    + ks * In * pow(max(.0f,dot(n,h)),ns);
         }
       }
+
+      if(mat->opacity)
+        c.xyz() *= ym::vec3f(mat->opacity)
+                   + ym::vec3f(1-mat->opacity)
+                     * compute_color(bvh,scn,ym::ray3f(p,ray.d,epsilon)).xyz();
+
 
       if(mat->kr.x!=0 && mat->kr.y!=0 && mat->kr.z!=0)//reflection
       {
@@ -226,7 +240,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh, const yobj::scene* scn, ym::ray3
         n.z*=a;//2(n*v)
         reflectionRay.d= n+ray.d;
         //avoid hitting visible point
-        reflectionRay.tmin=0.0005f+0.0002f;
+        reflectionRay.tmin=epsilon;//0.0005f+0.0002f;
         // accumulate the reflected light (recursive call) scaled by the material reflection
         c.xyz() += mat->kr*compute_color(bvh,scn, reflectionRay).xyz();
       }
