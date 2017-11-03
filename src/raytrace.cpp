@@ -8,7 +8,7 @@
 #include "math.h"
 
 using namespace std;
-vector<yobj::shape*> lights= vector<yobj::shape*>{};
+vector<yobj::instance*> lights;
 float epsilon = 1e-4;
 
 ym::vec3f triangleNormal(const yobj::mesh* msh, int eid, ym::vec3f euv) {
@@ -32,13 +32,8 @@ ym::vec3f linePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
 }
 
 ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::texture* tex ){
-  //cout<<msh->shapes[0]->texcoord.size()<<endl;
-  //auto uv = trianglePosition(msh, eid, euv);
-  //cout<<" i "<<msh->shapes[0]->texcoord[eid].x<<" j " <<msh->shapes[0]->texcoord[eid].y<<endl;
   auto tr = msh->shapes[0]->triangles[eid];
 
-  //auto uv =
-  //cout<<"tx "<<msh->shapes[0]->texcoord.size()<<" tr "<<msh->shapes[0]->triangles.size()<<endl;
   float u1 = msh->shapes[0]->texcoord[tr.x].x;
   float v1 = msh->shapes[0]->texcoord[tr.x].y;
   float u2 = msh->shapes[0]->texcoord[tr.y].x;
@@ -48,7 +43,6 @@ ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::textur
 
   float u = euv.x*u1 + euv.y*u2 + euv.z*u3;
   float v = euv.x*v1 + euv.y*v2 + euv.z*v3;
-
 
   float s = (fmod(u,1.0f))*tex->width();
   float t = (fmod(v,1.0f))*tex->height();
@@ -102,7 +96,7 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     auto shape=mesh->shapes[0];
 
     if (!shape->points.empty()) {
-      lights.push_back(shape);
+      //lights.push_back(shape);
       continue;
 
     } else if (!shape->lines.empty()) {
@@ -125,8 +119,10 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 
     auto shp = ist->msh->shapes[0];
 
-    if(!shp->points.empty())
+    if(!shp->points.empty()){
+      lights.push_back(ist);
       continue;
+    }
 
     //auto new_frame = ym::transform_frame(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ym::to_frame(ist->xform()));
     //auto iid =
@@ -158,11 +154,7 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
 
 ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj::scene* scn, ym::ray3f ray){
 
-  //ym::transform_ray(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ray);
-  //ray=ym::transform_ray(ym::to_frame(scn->cameras[0]->xform()),ray);
   auto intersection = ybvh::intersect_scene(bvh, ray, false);
-
-//  ym::ray3f r = ym::ray3f(ym::transform_ray(ym::to_frame(scn->instances[intersection.iid]->xform()),ray));
 
   ym::vec4f c = ym::vec4f(0,0,0,1);
 
@@ -193,12 +185,12 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
       }
       for(auto light:lights){
 
-        auto l = ym::normalize(light->pos[0]-p);
-        auto r = ym::length(light->pos[0]-p);
+        auto l = ym::normalize(light->translation-p);
+        auto r = ym::length(light->translation-p);
 
         ym::ray3f sr = ym::ray3f(p,l,epsilon,r);
         auto shadow = ybvh::intersect_scene(bvh, sr, false);
-        auto In = light->mat->ke / (r * r);
+        auto In = light->msh->shapes[0]->mat->ke / (r * r);
         if(!shadow) {
           auto v = ym::normalize(ray.o-p);
           auto h = ym::normalize((v+l));
@@ -247,8 +239,8 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
 
       for(auto light:lights){
 
-        auto l = normalize(light->pos[0]-p);
-        auto r = length(light->pos[0]-p);
+        auto l = normalize(light->translation-p);
+        auto r = length(light->translation-p);
 
         auto v = ym::normalize(ray.o-p);
         auto h = ym::normalize((v+l));
@@ -257,7 +249,7 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
         auto shadow = ybvh::intersect_scene(bvh, sr, false);
 
         if(!shadow) {
-          auto In = light->mat->ke / (r * r);
+          auto In = light->msh->shapes[0]->mat->ke / (r * r);
           c.xyz() += kd * In * ym::sqrt(1-ym::abs(ym::dot(n,l)))
                   + ks * In * ym::pow(sqrt(1-ym::abs(ym::dot(n,h))),ns);
         }
@@ -341,8 +333,9 @@ int main(int argc, char** argv) {
   /*for(auto ist:scn->instances) {
     cerr << ist->msh->shapes[0]->mat->kd_txt->path << endl;
   }*/
-  // create bvh
 
+
+  // create bvh
   yu::logging::log_info("creating bvh");
   auto bvh = make_bvh(scn);
   yu::logging::log_info("bvh created");
