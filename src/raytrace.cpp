@@ -185,8 +185,8 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
       }
       for(auto light:lights){
 
-        auto l = ym::normalize(light->translation-p);
-        auto r = ym::length(light->translation-p);
+        auto l = ym::normalize(light->msh->shapes[0]->pos[0]-p);
+        auto r = ym::length(light->msh->shapes[0]->pos[0]-p);
 
         ym::ray3f sr = ym::ray3f(p,l,epsilon,r);
         auto shadow = ybvh::intersect_scene(bvh, sr, false);
