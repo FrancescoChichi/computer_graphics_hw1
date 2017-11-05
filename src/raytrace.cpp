@@ -48,8 +48,8 @@ ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::textur
   float s = (fmod(u,1.0f))*tex->width();
   float t = (fmod(v,1.0f))*tex->height();
 
-  auto i = (int)round(s);
-  auto j = (int)round(t);
+  auto i = (int)ym::floor(s);
+  auto j = (int)ym::floor(t);
 
   auto i1 = (int)round((i + 1)%tex->width());
   auto j1 = (int)round((j + 1)%tex->height());
@@ -73,7 +73,6 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
     auto shape=mesh->shapes[0];
 
     if (!shape->points.empty()) {
-      //lights.push_back(shape);
       continue;
 
     } else if (!shape->lines.empty()) {
@@ -103,11 +102,8 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
       continue;
     }
 
-    //auto new_frame = ym::transform_frame(ym::inverse(ym::to_frame(scn->cameras[0]->xform())),ym::to_frame(ist->xform()));
-    //auto iid =
     ybvh::add_instance(bvh_scn, ym::to_frame(ist->xform()),
                          shape_map.at(shp));
-    //ybvh::set_instance_frame(bvh_scn,iid,new_frame);
   }
 
   ybvh::build_scene_bvh(bvh_scn);
@@ -117,7 +113,6 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
 ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
 
   auto camera_pos = ym::to_frame(cam->xform());
-  //auto camera_pos = ym::inverse(ym::to_frame(cam->xform()));
 
   auto q = camera_pos.o
    + ((u - .5f)*w*camera_pos.x)
@@ -139,8 +134,6 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
 
   if(intersection){
 
-    //ray=ym::transform_ray(ym::to_frame(scn->instances[intersection.iid]->xform()),ray);
-    //intersection = ybvh::intersect_scene(bvh, ray, false);
     auto ist = scn->instances[intersection.iid];
     auto msh = ist->msh;
     auto mat = msh->shapes[0]->mat;
@@ -149,11 +142,9 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
     auto ist_frame = ym::to_frame(ist->xform());
     auto ns = (mat->rs) ? 2 / (mat->rs * mat->rs) - 2 : 1e6f;
 
-    if(!scn->instances[intersection.iid]->msh->shapes[0]->triangles.empty()){//triangles
-      //ray=ym::transform_ray(ym::inverse(scn->cameras[0]->xform()),ray);
+    //triangles
+    if(!scn->instances[intersection.iid]->msh->shapes[0]->triangles.empty()){
       ray=ym::transform_ray(ist_frame,ray);
-      //auto n = ym::transform_point(ist_frame,triangleNormal(msh,intersection.eid,intersection.euv.xyz()));
-      //auto p = ym::transform_point(ist_frame,trianglePosition(msh,intersection.eid,intersection.euv.xyz()));
       auto n = triangleNormal(msh,intersection.eid,intersection.euv.xyz());
       auto p = trianglePosition(msh,intersection.eid,intersection.euv.xyz());
 
@@ -255,7 +246,6 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
           img[{i, (height-1-j)}] +=  compute_color(bvh,amb,scn,ray);
         }
       }
-      //img[{i,(height-1-j)}]+=amb ;
       img[{i, (height-1-j)}] /= {norm,norm,norm,1};
     }
   }
@@ -298,13 +288,6 @@ int main(int argc, char** argv) {
   yobj::add_normals(scn);
   yobj::add_radius(scn, 0.001f);
   yobj::add_instances(scn);
-  //yobj::add_texture_data(scn);
-  // scn->cameras.clear();
-//  yobj::add_default_camera(scn);
-
-  /*for(auto ist:scn->instances) {
-    cerr << ist->msh->shapes[0]->mat->kd_txt->path << endl;
-  }*/
 
   // create bvh
   yu::logging::log_info("creating bvh");
