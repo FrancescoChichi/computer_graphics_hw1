@@ -252,7 +252,7 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
 
 ym::image4f raytrace_mt(const yobj::scene* scn, const ybvh::scene* bvh,
                         const ym::vec4f& amb, int resolution, int samples) {
-  return {raytrace(scn,bvh,amb,resolution,samples)};
+  return {};
 }
 
 int main(int argc, char** argv) {
