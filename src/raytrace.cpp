@@ -7,7 +7,6 @@
 #include "printData.h"
 #include "math.h"
 
-using namespace std;
 vector<yobj::instance*> lights;
 float epsilon = 1e-4;
 
@@ -80,7 +79,6 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
                                               (int) shape->lines.size(), shape->lines.data(),
                                               (int) shape->pos.size(), shape->pos.data(),
                                               shape->radius.data());
-
     } else if (!shape->triangles.empty()) {
       shape_map[shape] = ybvh::add_triangle_shape(bvh_scn,
                                                   (int) shape->triangles.size(), shape->triangles.data(),
@@ -94,8 +92,6 @@ ybvh::scene* make_bvh(yobj::scene* scn) {
   for (auto ist : scn->instances) {
 
     auto shp = ist->msh->shapes[0];
-
-
 
     if(!shp->points.empty()){
       lights.push_back(ist);
@@ -118,7 +114,6 @@ ym::ray3f camera_ray(yobj::camera* cam, float u, float v, float w, float h){
    + ((u - .5f)*w*camera_pos.x)
    + ((v - .5f)*h*camera_pos.y)
    - (camera_pos.z);
-
 
   auto d = q-camera_pos.o;
   ym::ray3f ray = ym::ray3f(camera_pos.o,ym::normalize(d),epsilon);
@@ -257,8 +252,7 @@ ym::image4f raytrace(const yobj::scene* scn, const ybvh::scene* bvh,
 
 ym::image4f raytrace_mt(const yobj::scene* scn, const ybvh::scene* bvh,
                         const ym::vec4f& amb, int resolution, int samples) {
-  // YOUR CODE GOES HERE ----------------------
-  return {};
+  return {raytrace(scn,bvh,amb,resolution,samples)};
 }
 
 int main(int argc, char** argv) {
