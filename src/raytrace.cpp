@@ -31,7 +31,8 @@ ym::vec3f linePosition(const yobj::mesh* msh, int eid, ym::vec3f euv) {
   return (euv.x * msh->shapes[0]->pos[l.x] + euv.y * msh->shapes[0]->pos[l.y]);
 }
 
-ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::texture* tex ){
+ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::texture* tex){
+
   auto tr = msh->shapes[0]->triangles[eid];
 
   float u1 = msh->shapes[0]->texcoord[tr.x].x;
@@ -55,8 +56,6 @@ ym::vec4f textureLDR(const yobj::mesh* msh, int eid, ym::vec3f euv, yobj::textur
 
   float wi = s - i;
   float wj = t - j;
-
-  //return ym::srgb_to_linear(tex->ldr[{i,j}]);
 
   return ym::vec4f((1-wi)*(1-wj))*ym::srgb_to_linear(tex->ldr[{i,j}])
          +ym::vec4f(wi*(1-wj))*ym::srgb_to_linear(tex->ldr[{i1,j}])
@@ -158,7 +157,6 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
       auto n = triangleNormal(msh,intersection.eid,intersection.euv.xyz());
       auto p = trianglePosition(msh,intersection.eid,intersection.euv.xyz());
 
-
       if(mat->kd_txt!= nullptr)
         kd*=textureLDR(msh, intersection.eid, intersection.euv.xyz(), mat->kd_txt).xyz();
 
@@ -167,23 +165,14 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
 
 
       for(auto light:lights){
-        //auto light_pose = ym::transform_point(ist_frame,light->translation);
-        //auto light_pose = light->translation;
-        //auto light_pose = ym::transform_point(ym::to_frame(light->xform()),light->msh->shapes[0]->pos[0]);
-        //auto light_frame = ym::transform_frame(ym::inverse(ym::to_frame(light->xform())),ym::to_frame(light->xform()));
-        //light_frame = ym::transform_frame(ist_frame,ym::to_frame(light->xform()));
 
-        //auto light_frame = ym::inverse(ym::to_frame(light->xform()))*ist_frame;
-            //ym::transform_frame(ist_frame,ym::to_frame(light->xform()));
-        //auto light_pose = ym::transform_point(light->xform(),light->msh->shapes[0]->pos[0]);
-        auto light_pose = ym::transform_point(light->xform(),light->msh->shapes[0]->pos[0]);
-        //light_pose = ym::transform_point(ist_frame,light_pose);
-        //light_pose = ym::transform_point(ist_frame,light_pose);
+        auto light_pose = light->translation + light->msh->shapes[0]->pos[0];
+        light_pose = ym::transform_point_inverse(ist_frame, light_pose);
+
         auto l = ym::normalize(light_pose-p);
         auto r = ym::length(light_pose-p);
 
         ym::ray3f sr = ym::ray3f(p,l,epsilon,r);
-        //sr=ym::transform_ray(ym::inverse(scn->cameras[0]->xform()),sr);
         sr=ym::transform_ray(ist_frame,sr);
 
         auto shadow = ybvh::intersect_scene(bvh, sr, false);
@@ -196,7 +185,6 @@ ym::vec4f compute_color(const ybvh::scene* bvh,const ym::vec4f& amb, const yobj:
                    + ks * In * ym::pow(ym::max(.0f,ym::dot(n,h)),ns);
         }
       }
-
 
       //reflection
       if(mat->kr.x!=0 && mat->kr.y!=0 && mat->kr.z!=0)
@@ -317,8 +305,6 @@ int main(int argc, char** argv) {
   /*for(auto ist:scn->instances) {
     cerr << ist->msh->shapes[0]->mat->kd_txt->path << endl;
   }*/
-
-
 
   // create bvh
   yu::logging::log_info("creating bvh");
